@@ -1,0 +1,56 @@
+{
+  "name": "Lindau Garten- und Landschaftsbau",
+  "short_name": "Lindau Garten",
+  "description": "Betriebsverwaltung für Lindau Garten- und Landschaftsbau",
+  "start_url": "./gartenbau-manager.html",
+  "display": "standalone",
+  "background_color": "#1a3a2a",
+  "theme_color": "#1a3a2a",
+  "orientation": "portrait-primary",
+  "lang": "de",
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Neuer Auftrag",
+      "short_name": "Auftrag",
+      "description": "Neuen Auftrag erstellen",
+      "url": "./gartenbau-manager.html#auftraege",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Zeiterfassung",
+      "short_name": "Zeiten",
+      "description": "Arbeitsstunden erfassen",
+      "url": "./gartenbau-manager.html#zeiterfassung",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
