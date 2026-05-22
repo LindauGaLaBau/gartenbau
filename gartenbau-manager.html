@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lindau Garten">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1a3a2a">
+<meta name="description" content="Betriebsverwaltung für Lindau Garten- und Landschaftsbau">
+<link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogIkxpbmRhdSBHYXJ0ZW4tIHVuZCBMYW5kc2NoYWZ0c2JhdSIsICJzaG9ydF9uYW1lIjogIkxpbmRhdSBHYXJ0ZW4iLCAiZGVzY3JpcHRpb24iOiAiQmV0cmllYnN2ZXJ3YWx0dW5nIGZcdTAwZmNyIExpbmRhdSBHYXJ0ZW4tIHVuZCBMYW5kc2NoYWZ0c2JhdSIsICJzdGFydF91cmwiOiAiLi9nYXJ0ZW5iYXUtbWFuYWdlci5odG1sIiwgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMxYTNhMmEiLCAidGhlbWVfY29sb3IiOiAiIzFhM2EyYSIsICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdC1wcmltYXJ5IiwgImxhbmciOiAiZGUiLCAiaWNvbnMiOiBbeyJzcmMiOiAiaWNvbi0xOTIucG5nIiwgInNpemVzIjogIjE5MngxOTIiLCAidHlwZSI6ICJpbWFnZS9wbmciLCAicHVycG9zZSI6ICJhbnkgbWFza2FibGUifSwgeyJzcmMiOiAiaWNvbi01MTIucG5nIiwgInNpemVzIjogIjUxMng1MTIiLCAidHlwZSI6ICJpbWFnZS9wbmciLCAicHVycG9zZSI6ICJhbnkgbWFza2FibGUifV19">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a3a2a'/><text y='.9em' font-size='80' x='10'>🌿</text></svg>">
+<title>Lindau Garten- und Landschaftsbau</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gruen-dunkel: #1a3a2a; --gruen-mittel: #2d5a3d;
+    --gruen-hell: #4a8c5c;   --gruen-frisch: #6bbf7a;
+    --erde: #8b6240;          --sand: #f5ede0;
+    --weiss: #fafaf7;         --text-dunkel: #1a2015;
+    --text-mittel: #3d4a35;   --akzent: #c8a84b;
+    --rot-warn: #c0392b;      --blau-info: #2980b9;
+    --schatten: 0 2px 16px rgba(26,58,42,0.12);
+    --schatten-stark: 0 6px 32px rgba(26,58,42,0.2);
+    --radius: 14px; --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── PWA SAFE AREAS (iPhone Notch / Dynamic Island) ── */
+  :root {
+    --sat: env(safe-area-inset-top, 0px);
+    --sar: env(safe-area-inset-right, 0px);
+    --sab: env(safe-area-inset-bottom, 0px);
+    --sal: env(safe-area-inset-left, 0px);
+  }
+  @media all and (display-mode: standalone) {
+    .topbar { padding-top: max(10px, env(safe-area-inset-top)) !important; }
+    .bottom-nav { padding-bottom: max(10px, env(safe-area-inset-bottom)) !important; }
+    .content { padding-bottom: calc(76px + env(safe-area-inset-bottom)) !important; }
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--sand); color: var(--text-dunkel);
+    min-height: 100vh; overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* ── SIDEBAR ── */
+  /* ── PWA SAFE AREA ── */
+  body.ios-standalone .topbar {
+    padding-top: calc(44px + env(safe-area-inset-top, 20px));
+  }
+  body.ios-standalone .bottom-nav {
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 20px));
+  }
+  body.ios-standalone .content, body.ios-standalone .main > *:last-child {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 20px));
+  }
+  .main { padding-bottom: env(safe-area-inset-bottom); }
+  .bottom-nav { padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+  .topbar { padding-top: max(10px, env(safe-area-inset-top)); }
+
+  .sidebar {
+    position: fixed; top: 0; left: 0; height: 100vh; width: 240px;
+    background: var(--gruen-dunkel); display: flex; flex-direction: column;
+    z-index: 200; box-shadow: 4px 0 30px rgba(0,0,0,0.18);
+    transition: transform var(--transition); overflow-y: auto;
+  }
+  .sidebar-logo { padding: 24px 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .sidebar-logo .logo-icon { font-size: 1.8rem; }
+  .sidebar-logo h1 {
+    font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 900;
+    color: var(--weiss); line-height: 1.2; margin-top: 4px;
+  }
+  .sidebar-logo span { color: var(--gruen-frisch); }
+  .sidebar-subtitle { font-size: 0.65rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
+  .nav-section { padding: 12px 0 6px; }
+  .nav-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.3); padding: 0 20px 5px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px; padding: 11px 20px; cursor: pointer;
+    color: rgba(255,255,255,0.65); font-size: 0.88rem; font-weight: 500;
+    transition: all var(--transition); border-left: 3px solid transparent; user-select: none;
+    min-height: 44px;
+  }
+  .nav-item:hover { color: var(--weiss); background: rgba(255,255,255,0.06); }
+  .nav-item.active { color: var(--gruen-frisch); border-left-color: var(--gruen-frisch); background: rgba(107,191,122,0.1); }
+  .nav-item .nav-icon { font-size: 1.1rem; width: 22px; text-align: center; }
+  .sidebar-footer { margin-top: auto; padding: 14px 20px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.7rem; color: rgba(255,255,255,0.25); }
+
+  /* ── MAIN ── */
+  .main { margin-left: 240px; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* ── TOPBAR ── */
+  /* Topbar accounts for Dynamic Island / notch */
+  @media (display-mode: standalone) {
+    .topbar {
+      padding-top: max(10px, env(safe-area-inset-top)) !important;
+    }
+    .bottom-nav {
+      padding-bottom: max(10px, env(safe-area-inset-bottom)) !important;
+    }
+    .content { padding-bottom: calc(76px + env(safe-area-inset-bottom)) !important; }
+  }
+  .topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(245,237,224,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(26,58,42,0.08);
+    padding: 10px 20px; display: flex; align-items: center; justify-content: space-between;
+    gap: 8px;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .topbar-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--gruen-dunkel); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar-right { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .topbar-date { font-size: 0.78rem; color: var(--text-mittel); background: rgba(26,58,42,0.07); padding: 5px 12px; border-radius: 20px; white-space: nowrap; }
+
+  /* ── PAGES ── */
+  .page { display: none; padding: 16px; animation: fadeIn 0.25s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 16px; border-radius: 10px; border: none;
+    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.85rem;
+    cursor: pointer; transition: all var(--transition); min-height: 40px;
+    white-space: nowrap;
+  }
+  .btn-primary { background: var(--gruen-hell); color: var(--weiss); }
+  .btn-primary:hover { background: var(--gruen-mittel); }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-outline { background: transparent; border: 2px solid var(--gruen-hell); color: var(--gruen-hell); }
+  .btn-outline:hover { background: var(--gruen-hell); color: var(--weiss); }
+  .btn-sm { padding: 7px 12px; font-size: 0.8rem; border-radius: 8px; min-height: 36px; }
+  .btn-danger { background: rgba(192,57,43,0.1); color: var(--rot-warn); border: none; }
+  .btn-danger:hover { background: var(--rot-warn); color: var(--weiss); }
+  .btn-icon { padding: 8px; min-width: 36px; justify-content: center; }
+
+  /* ── SECTION HEADER ── */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 8px; flex-wrap: wrap; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--gruen-dunkel); }
+
+  /* ── CARDS ── */
+  .card { background: var(--weiss); border-radius: var(--radius); box-shadow: var(--schatten); overflow: hidden; }
+  .card-header { padding: 14px 16px 12px; border-bottom: 1px solid rgba(26,58,42,0.07); display: flex; align-items: center; justify-content: space-between; }
+  .card-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--gruen-dunkel); }
+  .card-body { padding: 14px 16px; }
+
+  /* ── DASHBOARD STATS ── */
+  .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+  .stat-card {
+    background: var(--weiss); border-radius: var(--radius); padding: 14px 16px;
+    box-shadow: var(--schatten); border-left: 4px solid var(--gruen-hell);
+  }
+  .stat-card.warn { border-left-color: var(--akzent); }
+  .stat-card.info { border-left-color: var(--blau-info); }
+  .stat-card.alert { border-left-color: var(--rot-warn); }
+  .stat-icon { font-size: 1.4rem; margin-bottom: 6px; }
+  .stat-value { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 900; color: var(--gruen-dunkel); line-height: 1; }
+  .stat-label { font-size: 0.75rem; color: var(--text-mittel); margin-top: 3px; font-weight: 500; }
+  .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+
+  /* ── AUFTRAG / LIST ITEMS ── */
+  .auftrag-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(26,58,42,0.06); }
+  .auftrag-item:last-child { border-bottom: none; }
+  .auftrag-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .dot-gruen { background: var(--gruen-frisch); } .dot-gelb { background: var(--akzent); } .dot-grau { background: #b0b8a8; }
+  .auftrag-info { flex: 1; min-width: 0; }
+  .auftrag-name { font-weight: 600; font-size: 0.88rem; color: var(--gruen-dunkel); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .auftrag-detail { font-size: 0.75rem; color: var(--text-mittel); margin-top: 2px; }
+
+  /* ── STATUS BADGES ── */
+  .status-badge { font-size: 0.68rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+  .badge-aktiv { background: rgba(107,191,122,0.15); color: var(--gruen-hell); }
+  .badge-geplant { background: rgba(200,168,75,0.15); color: var(--erde); }
+  .badge-abgeschlossen { background: rgba(176,184,168,0.2); color: #6a7460; }
+  .badge-dringend { background: rgba(192,57,43,0.12); color: var(--rot-warn); }
+
+  /* ── TEAM WIDGET ── */
+  .mitarbeiter-mini { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(26,58,42,0.06); }
+  .mitarbeiter-mini:last-child { border-bottom: none; }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; color: var(--weiss); flex-shrink: 0; }
+  .av1{background:var(--gruen-hell);} .av2{background:var(--erde);} .av3{background:var(--blau-info);} .av4{background:#8e44ad;} .av5{background:var(--akzent);}
+  .mitarbeiter-mini .m-name { font-weight: 600; font-size: 0.85rem; }
+  .mitarbeiter-mini .m-rolle { font-size: 0.72rem; color: var(--text-mittel); }
+  .anwesend { font-size: 0.68rem; padding: 2px 8px; border-radius: 10px; margin-left: auto; flex-shrink: 0; }
+  .anwesend.ja { background: rgba(107,191,122,0.2); color: var(--gruen-hell); }
+  .anwesend.nein { background: rgba(192,57,43,0.1); color: var(--rot-warn); }
+
+  /* ── MOBILE CARD LIST (replaces tables on mobile) ── */
+  .mobile-list { display: none; }
+  .mobile-card {
+    background: var(--weiss); border-radius: 12px; padding: 14px;
+    margin-bottom: 10px; box-shadow: var(--schatten);
+    border-left: 4px solid var(--gruen-hell);
+  }
+  .mobile-card.warn { border-left-color: var(--akzent); }
+  .mobile-card.danger { border-left-color: var(--rot-warn); }
+  .mobile-card-title { font-weight: 700; font-size: 0.95rem; color: var(--gruen-dunkel); margin-bottom: 6px; }
+  .mobile-card-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-size: 0.82rem; }
+  .mobile-card-label { color: var(--text-mittel); font-weight: 500; }
+  .mobile-card-value { color: var(--text-dunkel); font-weight: 600; text-align: right; max-width: 60%; }
+  .mobile-card-actions { display: flex; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(26,58,42,0.07); flex-wrap: wrap; }
+  .mobile-card-actions .btn { flex: 1; justify-content: center; min-width: 80px; }
+
+  /* ── DESKTOP TABLE ── */
+  .desktop-table { display: block; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; padding: 10px 12px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-mittel); border-bottom: 2px solid rgba(26,58,42,0.1); background: rgba(26,58,42,0.03); }
+  td { padding: 11px 12px; font-size: 0.85rem; border-bottom: 1px solid rgba(26,58,42,0.06); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(107,191,122,0.04); }
+
+  /* ── FORMS ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 0.78rem; font-weight: 600; color: var(--text-mittel); }
+  input, select, textarea {
+    padding: 12px 14px; border: 2px solid rgba(26,58,42,0.12);
+    border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 1rem;
+    color: var(--text-dunkel); background: var(--weiss);
+    transition: border-color var(--transition); outline: none;
+    -webkit-appearance: none; appearance: none;
+    min-height: 46px;
+  }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%233d4a35' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+  input:focus, select:focus, textarea:focus { border-color: var(--gruen-hell); box-shadow: 0 0 0 3px rgba(74,140,92,0.12); }
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* ── MODAL ── */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26,42,21,0.6); backdrop-filter: blur(4px); z-index: 300; align-items: flex-end; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--weiss); border-radius: 20px 20px 0 0;
+    padding: 20px 20px 32px; width: 100%; max-width: 600px;
+    box-shadow: var(--schatten-stark); max-height: 90vh; overflow-y: auto;
+    animation: slideUp 0.3s cubic-bezier(0.34,1.2,0.64,1);
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: none; } }
+  .modal-handle { width: 40px; height: 4px; background: rgba(26,58,42,0.15); border-radius: 2px; margin: 0 auto 16px; }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--gruen-dunkel); margin-bottom: 18px; }
+  .modal-footer { display: flex; gap: 10px; justify-content: stretch; margin-top: 20px; }
+  .modal-footer .btn { flex: 1; justify-content: center; padding: 13px; font-size: 0.9rem; }
+
+  /* ── KALENDER ── */
+  .kalender-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center; }
+  .kal-header { font-size: 0.68rem; font-weight: 700; color: var(--text-mittel); padding: 5px 0; }
+  .kal-day { aspect-ratio: 1; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.8rem; cursor: pointer; transition: background var(--transition); padding: 2px; }
+  .kal-day:hover { background: rgba(107,191,122,0.15); }
+  .kal-day.today { background: var(--gruen-hell); color: var(--weiss); font-weight: 700; }
+  .kal-day.has-event::after { content: ''; display: block; width: 5px; height: 5px; background: var(--akzent); border-radius: 50%; margin-top: 1px; }
+  .kal-day.grau { color: #c0c8b8; }
+
+  /* ── LAGER ── */
+  .lager-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 10px; background: rgba(26,58,42,0.03); margin-bottom: 8px; border: 1px solid rgba(26,58,42,0.07); }
+  .lager-icon { font-size: 1.4rem; }
+  .lager-info { flex: 1; min-width: 0; }
+  .lager-name { font-weight: 600; font-size: 0.88rem; }
+  .lager-menge { font-size: 0.75rem; color: var(--text-mittel); }
+  .lager-bar-wrap { flex: 1; min-width: 60px; }
+  .lager-bar-bg { height: 6px; background: rgba(26,58,42,0.1); border-radius: 4px; overflow: hidden; }
+  .lager-bar { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+  .bar-ok{background:var(--gruen-frisch);} .bar-warn{background:var(--akzent);} .bar-krit{background:var(--rot-warn);}
+
+  /* ── FINANZEN ── */
+  .finanzen-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .fin-card { background: var(--weiss); border-radius: var(--radius); padding: 16px; box-shadow: var(--schatten); text-align: center; }
+  .fin-betrag { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; }
+  .fin-betrag.ein{color:var(--gruen-hell);} .fin-betrag.aus{color:var(--rot-warn);} .fin-betrag.gewinn{color:var(--gruen-dunkel);}
+  .fin-label { font-size: 0.72rem; color: var(--text-mittel); margin-top: 3px; font-weight: 500; }
+
+  /* ── WETTER ── */
+  .wetter-widget { background: linear-gradient(135deg, var(--gruen-mittel), var(--gruen-dunkel)); border-radius: var(--radius); padding: 16px; color: var(--weiss); margin-bottom: 16px; display: flex; align-items: center; gap: 14px; }
+  .wetter-icon { font-size: 2.4rem; }
+  .wetter-temp { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; line-height: 1; }
+  .wetter-info { font-size: 0.78rem; opacity: 0.8; margin-top: 3px; }
+  .wetter-tags { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; justify-content: flex-end; }
+  .wetter-tag { background: rgba(255,255,255,0.12); border-radius: 20px; padding: 4px 10px; font-size: 0.72rem; }
+
+  /* ── STUNDENKONTO ── */
+  .stundenkonto-card {
+    background: var(--weiss); border-radius: var(--radius); padding: 14px 16px;
+    box-shadow: var(--schatten); border-top: 4px solid var(--gruen-hell);
+  }
+  .stundenkonto-card .sk-name { font-weight:700; font-size:0.9rem; margin-bottom:4px; }
+  .stundenkonto-card .sk-stunden { font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:900; color:var(--gruen-dunkel); line-height:1; }
+  .stundenkonto-card .sk-lohn { font-size:0.78rem; color:var(--text-mittel); margin-top:4px; }
+
+  /* ── AUFGABEN ── */
+  .aufgabe-card {
+    background: var(--weiss); border-radius: 12px; padding: 14px;
+    margin-bottom: 10px; box-shadow: var(--schatten);
+    border-left: 4px solid var(--gruen-hell);
+    transition: all var(--transition);
+  }
+  .aufgabe-card.hoch { border-left-color: var(--rot-warn); }
+  .aufgabe-card.mittel { border-left-color: var(--akzent); }
+  .aufgabe-card.erledigt { opacity:0.55; border-left-color:#b0b8a8; }
+  .aufgabe-card .auf-titel { font-weight:700; font-size:0.9rem; margin-bottom:6px; }
+  .aufgabe-card .auf-meta { font-size:0.74rem; color:var(--text-mittel); display:flex; gap:8px; flex-wrap:wrap; }
+
+  /* ── PASSWORT DOTS ── */
+  .pw-dot {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid var(--gruen-hell); background: transparent;
+    transition: background 0.2s;
+  }
+  .pw-dot.filled { background: var(--gruen-hell); }
+
+  /* ── MULTI SELECT ── */
+  .multi-select-wrap { border: 2px solid rgba(26,58,42,0.12); border-radius: 10px; overflow: hidden; background: var(--weiss); transition: border-color var(--transition); max-height: 160px; overflow-y: auto; }
+  .multi-select-wrap:focus-within { border-color: var(--gruen-hell); box-shadow: 0 0 0 3px rgba(74,140,92,0.12); }
+  .multi-select-option { display: flex; align-items: center; gap: 10px; padding: 11px 14px; cursor: pointer; font-size: 0.88rem; transition: background var(--transition); user-select: none; min-height: 44px; }
+  .multi-select-option:hover { background: rgba(107,191,122,0.1); }
+  .multi-select-option input[type=checkbox] { accent-color: var(--gruen-hell); width:18px; height:18px; cursor:pointer; flex-shrink:0; }
+  .selected-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; min-height:22px; }
+  .ma-tag { background: rgba(74,140,92,0.12); color: var(--gruen-dunkel); border-radius: 20px; padding: 3px 10px; font-size: 0.75rem; font-weight: 600; }
+
+  /* ── TOAST ── */
+  #toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--gruen-dunkel); color: var(--weiss); padding: 12px 22px; border-radius: 50px; font-size: 0.88rem; font-weight: 600; box-shadow: var(--schatten-stark); opacity: 0; transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1); z-index: 999; white-space: nowrap; }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── HAMBURGER ── */
+  .hamburger { display: none; flex-direction: column; justify-content: center; align-items: center; gap: 5px; width: 40px; height: 40px; background: var(--gruen-dunkel); border: none; border-radius: 10px; cursor: pointer; padding: 8px; flex-shrink: 0; }
+  .hamburger span { display: block; width: 20px; height: 2px; background: var(--weiss); border-radius: 2px; transition: all var(--transition); }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ── SIDEBAR OVERLAY ── */
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 199; }
+  .sidebar-overlay.open { display: block; }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--gruen-dunkel); z-index: 150; padding: 4px 0 calc(8px + env(safe-area-inset-bottom)); box-shadow: 0 -4px 20px rgba(0,0,0,0.2); }
+  .bottom-nav-items { display: flex; justify-content: space-around; align-items: center; }
+  .bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; color: rgba(255,255,255,0.5); font-size: 0.6rem; font-weight: 600; cursor: pointer; padding: 6px 8px; border-radius: 8px; transition: all var(--transition); min-width: 52px; text-align: center; -webkit-tap-highlight-color: transparent; }
+  .bottom-nav-item .bn-icon { font-size: 1.4rem; line-height: 1; }
+  .bottom-nav-item.active { color: var(--gruen-frisch); }
+  .bottom-nav-item:active { background: rgba(255,255,255,0.08); transform: scale(0.95); }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(26,58,42,0.2); border-radius: 4px; }
+
+  /* ══════════════════════════════════════
+     MOBILE STYLES  (≤ 768px)
+  ══════════════════════════════════════ */
+  @media (max-width: 768px) {
+    /* ── PWA SAFE AREA ── */
+  body.ios-standalone .topbar {
+    padding-top: calc(44px + env(safe-area-inset-top, 20px));
+  }
+  body.ios-standalone .bottom-nav {
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 20px));
+  }
+  body.ios-standalone .content, body.ios-standalone .main > *:last-child {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 20px));
+  }
+  .main { padding-bottom: env(safe-area-inset-bottom); }
+  .bottom-nav { padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+  .topbar { padding-top: max(10px, env(safe-area-inset-top)); }
+
+  .sidebar { transform: translateX(-100%); width: 280px; }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; padding-bottom: 72px; }
+    .hamburger { display: flex; }
+    .bottom-nav { display: block; }
+    /* Topbar accounts for Dynamic Island / notch */
+  @media (display-mode: standalone) {
+    .topbar {
+      padding-top: max(10px, env(safe-area-inset-top)) !important;
+    }
+    .bottom-nav {
+      padding-bottom: max(10px, env(safe-area-inset-bottom)) !important;
+    }
+    .content { padding-bottom: calc(76px + env(safe-area-inset-bottom)) !important; }
+  }
+  .topbar { padding: 8px 12px; }
+    .topbar-date { display: none; }
+    .topbar-title { font-size: 1.05rem; }
+    .page { padding: 12px; }
+
+    /* Stats: 2 columns */
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 12px; }
+    .stat-value { font-size: 1.7rem; }
+
+    /* Dashboard grid: single column */
+    .dashboard-grid { grid-template-columns: 1fr; gap: 12px; }
+
+    /* Wetter: compact */
+    .wetter-widget { padding: 12px; gap: 10px; }
+    .wetter-icon { font-size: 1.8rem; }
+    .wetter-temp { font-size: 1.7rem; }
+    .wetter-tags { display: none; }
+
+    /* Hide desktop tables, show mobile cards */
+    .desktop-table { display: none !important; }
+    .mobile-list { display: block; }
+
+    /* Kalender: full width stacked */
+    #page-kalender > div { grid-template-columns: 1fr !important; }
+    .kal-day { font-size: 0.75rem; }
+
+    /* Lager: compact */
+    #page-lager > div { grid-template-columns: 1fr !important; }
+    .lager-item { flex-wrap: wrap; gap: 8px; }
+    .lager-bar-wrap { width: 100%; flex: none; }
+
+    /* Finanzen: 1 column */
+    .finanzen-summary { grid-template-columns: 1fr; gap: 8px; margin-bottom: 12px; }
+    .fin-betrag { font-size: 1.4rem; }
+
+    /* Forms: single column */
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+
+    /* Modal: full bottom sheet */
+    .modal { border-radius: 20px 20px 0 0; padding: 16px 16px 28px; }
+
+    /* Section header */
+    .section-header { margin-bottom: 12px; }
+    .section-title { font-size: 1.1rem; }
+    .btn { font-size: 0.82rem; padding: 9px 14px; }
+
+    /* Toast above bottom nav */
+    #toast { bottom: 80px; font-size: 0.82rem; }
+  }
+
+  /* DESKTOP: wider padding */
+  @media (min-width: 769px) {
+    .page { padding: 24px 28px; }
+    .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .dashboard-grid { grid-template-columns: 1.6fr 1fr; }
+    .finanzen-summary { grid-template-columns: repeat(3, 1fr); }
+    #page-kalender > div { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    #page-lager > div { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .modal { border-radius: 18px; max-height: 85vh; }
+    .modal-overlay { align-items: center; }
+    @keyframes slideUp { from { opacity:0; transform:scale(0.94) translateY(16px); } to { opacity:1; transform:none; } }
+    #toast { bottom: 28px; left: auto; right: 28px; transform: translateY(80px); border-radius: 10px; }
+    #toast.show { transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<script>
+// Fix iOS standalone mode
+if(window.navigator.standalone) {
+  document.body.classList.add('ios-standalone');
+}
+</script>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🌿</div>
+    <h1>Lindau <span>Garten</span></h1>
+    <div class="sidebar-subtitle">Garten- und Landschaftsbau</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Übersicht</div>
+    <div class="nav-item active" onclick="showPage('dashboard',this)">
+      <span class="nav-icon">📊</span> Dashboard
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Betrieb</div>
+    <div class="nav-item" onclick="showPage('auftraege',this)">
+      <span class="nav-icon">📋</span> Aufträge
+    </div>
+    <div class="nav-item" onclick="showPage('kunden',this)">
+      <span class="nav-icon">👥</span> Kunden
+    </div>
+    <div class="nav-item" onclick="showPage('mitarbeiter',this)">
+      <span class="nav-icon">👷</span> Mitarbeiter
+    </div>
+    <div class="nav-item" onclick="showPage('kalender',this)">
+      <span class="nav-icon">📅</span> Kalender
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Ressourcen</div>
+    <div class="nav-item" onclick="showPage('lager',this)">
+      <span class="nav-icon">🪣</span> Lager & Material
+    </div>
+    <div class="nav-item" onclick="showPage('maschinen',this)">
+      <span class="nav-icon">🚜</span> Maschinen
+    </div>
+    <div class="nav-item" onclick="showPage('finanzen',this)">
+      <span class="nav-icon">💶</span> Finanzen
+    </div>
+    <div class="nav-item" onclick="showPage('rechnungen',this)">
+      <span class="nav-icon">🧾</span> Rechnungen
+    </div>
+    <div class="nav-item" onclick="showPage('belege',this)">
+      <span class="nav-icon">📸</span> Belege
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Organisation</div>
+    <div class="nav-item" onclick="showPage('zeiterfassung',this)">
+      <span class="nav-icon">⏱</span> Zeiterfassung
+    </div>
+    <div class="nav-item" onclick="showPage('aufgaben',this)">
+      <span class="nav-icon">✅</span> Aufgaben
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    v2.0 · Lindau Garten- und Landschaftsbau<br>
+    <button onclick="openModal('pw-change-modal')" style="margin-top:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);padding:5px 12px;border-radius:8px;cursor:pointer;font-size:0.72rem;font-family:'DM Sans',sans-serif;">🔐 PIN verwalten</button>
+  </div>
+</nav>
+
+<!-- Mobile overlay -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<!-- Bottom Navigation (mobile) -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-items">
+    <div class="bottom-nav-item active" id="bn-dashboard" onclick="showPage('dashboard',null);updateBottomNav('dashboard')">
+      <div class="bn-icon">📊</div><div>Start</div>
+    </div>
+    <div class="bottom-nav-item" id="bn-auftraege" onclick="showPage('auftraege',null);updateBottomNav('auftraege')">
+      <div class="bn-icon">📋</div><div>Aufträge</div>
+    </div>
+    <div class="bottom-nav-item" id="bn-kunden" onclick="showPage('kunden',null);updateBottomNav('kunden')">
+      <div class="bn-icon">👥</div><div>Kunden</div>
+    </div>
+    <div class="bottom-nav-item" id="bn-mitarbeiter" onclick="showPage('mitarbeiter',null);updateBottomNav('mitarbeiter')">
+      <div class="bn-icon">👷</div><div>Team</div>
+    </div>
+    <div class="bottom-nav-item" id="bn-rechnungen" onclick="showPage('rechnungen',null);updateBottomNav('rechnungen')">
+      <div class="bn-icon">🧾</div><div>Rechnung</div>
+    </div>
+    <div class="bottom-nav-item" id="bn-belege" onclick="showPage('belege',null);updateBottomNav('belege')">
+      <div class="bn-icon">📸</div><div>Belege</div>
+    </div>
+    <div class="bottom-nav-item" id="bn-zeiterfassung" onclick="showPage('zeiterfassung',null);updateBottomNav('zeiterfassung')">
+      <div class="bn-icon">⏱</div><div>Zeiten</div>
+    </div>
+    <div class="bottom-nav-item" id="bn-aufgaben" onclick="showPage('aufgaben',null);updateBottomNav('aufgaben')">
+      <div class="bn-icon">✅</div><div>Aufgaben</div>
+    </div>
+    <div class="bottom-nav-item" id="bn-more" onclick="toggleSidebar()">
+      <div class="bn-icon">☰</div><div>Mehr</div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" id="hamburger-btn" onclick="toggleSidebar()">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="topbar-title" id="page-title">Dashboard</div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-date" id="date-display"></div>
+      <button class="btn btn-primary btn-sm" onclick="openModal('neu-auftrag-modal')">
+        ＋ Neuer Auftrag
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ DASHBOARD ══ -->
+  <div class="page active" id="page-dashboard">
+    <div class="wetter-widget">
+      <div class="wetter-icon">⛅</div>
+      <div>
+        <div class="wetter-temp">17°C</div>
+        <div class="wetter-info">Wechselnd bewölkt · Heute geeignet für Außenarbeiten</div>
+      </div>
+      <div class="wetter-tags">
+        <div class="wetter-tag">💧 42% Luftfeuchte</div>
+        <div class="wetter-tag">💨 12 km/h Wind</div>
+        <div class="wetter-tag">🌧 Regen ab 18 Uhr</div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-value" id="stat-auftraege">8</div>
+        <div class="stat-label">Aktive Aufträge</div>
+      </div>
+      <div class="stat-card warn">
+        <div class="stat-icon">👷</div>
+        <div class="stat-value" id="stat-ma">5</div>
+        <div class="stat-label">Mitarbeiter heute</div>
+      </div>
+      <div class="stat-card info">
+        <div class="stat-icon">💶</div>
+        <div class="stat-value" id="stat-umsatz">12.4k</div>
+        <div class="stat-label">Umsatz Monat (€)</div>
+      </div>
+      <div class="stat-card alert">
+        <div class="stat-icon">⚠️</div>
+        <div class="stat-value" id="stat-lager">3</div>
+        <div class="stat-label">Material nachbestellen</div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Aktuelle Aufträge</div>
+          <button class="btn btn-outline btn-sm" onclick="showPage('auftraege',null)">Alle →</button>
+        </div>
+        <div class="card-body">
+          <div id="dashboard-auftraege"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Team heute</div>
+        </div>
+        <div class="card-body" id="dashboard-team"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ AUFTRÄGE ══ -->
+  <div class="page" id="page-auftraege">
+    <div class="section-header">
+      <div class="section-title">Aufträge</div>
+      <button class="btn btn-primary" onclick="openModal('neu-auftrag-modal')">＋ Neuer Auftrag</button>
+    </div>
+    <div class="desktop-table card">
+      <div class="card-body" style="padding:0">
+        <table>
+          <thead>
+            <tr>
+              <th>Auftrag</th><th>Kunde</th><th>Datum & Uhrzeit</th><th>Mitarbeiter</th><th>Status</th><th>Aktionen</th>
+            </tr>
+          </thead>
+          <tbody id="auftraege-table"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mobile-list" id="auftraege-mobile"></div>
+  </div>
+
+  <!-- ══ KUNDEN ══ -->
+  <div class="page" id="page-kunden">
+    <div class="section-header">
+      <div class="section-title">Kundenverwaltung</div>
+      <button class="btn btn-primary" onclick="openModal('neu-kunde-modal')">＋ Neuer Kunde</button>
+    </div>
+    <div class="desktop-table card">
+      <div class="card-body" style="padding:0">
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Adresse</th><th>Telefon</th><th>E-Mail</th><th>Aufträge</th><th>Aktionen</th></tr>
+          </thead>
+          <tbody id="kunden-table"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mobile-list" id="kunden-mobile"></div>
+  </div>
+
+  <!-- ══ MITARBEITER ══ -->
+  <div class="page" id="page-mitarbeiter">
+    <div class="section-header">
+      <div class="section-title">Mitarbeiter</div>
+      <button class="btn btn-primary" onclick="openModal('neu-ma-modal')">＋ Neuer Mitarbeiter</button>
+    </div>
+    <div class="desktop-table card">
+      <div class="card-body" style="padding:0">
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Rolle</th><th>Telefon</th><th>Stundenlohn</th><th>Status</th><th>Aktionen</th></tr>
+          </thead>
+          <tbody id="ma-table"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mobile-list" id="ma-mobile"></div>
+  </div>
+
+  <!-- ══ KALENDER ══ -->
+  <div class="page" id="page-kalender">
+    <div class="section-header">
+      <div class="section-title">Terminkalender</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline btn-sm" onclick="changeMonth(-1)">‹</button>
+        <span id="kal-monat-label" style="line-height:2;font-weight:600;color:var(--gruen-dunkel)"></span>
+        <button class="btn btn-outline btn-sm" onclick="changeMonth(1)">›</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+      <div class="card">
+        <div class="card-body">
+          <div class="kalender-grid" id="kalender-grid"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Termine im Monat</div></div>
+        <div class="card-body" id="termine-liste"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LAGER ══ -->
+  <div class="page" id="page-lager">
+    <div class="section-header">
+      <div class="section-title">Lager & Material</div>
+      <button class="btn btn-primary" onclick="openModal('neu-material-modal')">＋ Material hinzufügen</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Bestandsübersicht</div></div>
+        <div class="card-body" id="lager-liste"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Nachbestellungen nötig</div></div>
+        <div class="card-body" id="lager-nachbestellen"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MASCHINEN ══ -->
+  <div class="page" id="page-maschinen">
+    <div class="section-header">
+      <div class="section-title">Maschinen & Fahrzeuge</div>
+      <button class="btn btn-primary" onclick="openModal('neu-maschine-modal')">＋ Gerät hinzufügen</button>
+    </div>
+    <div class="desktop-table card">
+      <div class="card-body" style="padding:0">
+        <table>
+          <thead>
+            <tr><th>Gerät</th><th>Typ</th><th>Status</th><th>Letzte Wartung</th><th>Nächste Wartung</th><th>Notizen</th><th>Aktionen</th></tr>
+          </thead>
+          <tbody id="maschinen-table"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mobile-list" id="maschinen-mobile"></div>
+  </div>
+
+
+  <!-- ══ RECHNUNGEN ══ -->
+  <div class="page" id="page-rechnungen">
+    <div class="section-header">
+      <div class="section-title">Rechnungen</div>
+      <button class="btn btn-primary" onclick="openModal('neu-rechnung-modal')">＋ Neue Rechnung</button>
+    </div>
+    <div class="desktop-table card">
+      <div class="card-body" style="padding:0">
+        <table>
+          <thead><tr><th>Nr.</th><th>Kunde</th><th>Datum</th><th>Leistungen</th><th>Betrag</th><th>Status</th><th>Aktionen</th></tr></thead>
+          <tbody id="rechnungen-table"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mobile-list" id="rechnungen-mobile"></div>
+  </div>
+
+  <!-- ══ BELEGE ══ -->
+  <div class="page" id="page-belege">
+    <div class="section-header">
+      <div class="section-title">Belege & Quittungen</div>
+      <button class="btn btn-primary" onclick="openBelegModal()">📸 Beleg erfassen</button>
+    </div>
+
+    <!-- Statistik-Leiste -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;" id="belege-stats-bar">
+      <div class="stat-card"><div class="stat-icon">🧾</div><div class="stat-value" id="beleg-stat-anzahl">0</div><div class="stat-label">Belege gesamt</div></div>
+      <div class="stat-card warn"><div class="stat-icon">📅</div><div class="stat-value" id="beleg-stat-monat">0</div><div class="stat-label">Diesen Monat</div></div>
+      <div class="stat-card info"><div class="stat-icon">💶</div><div class="stat-value" id="beleg-stat-summe">0 €</div><div class="stat-label">Gesamtbetrag</div></div>
+    </div>
+
+    <!-- KI-Hinweis -->
+    <div style="margin-bottom:14px;padding:11px 16px;background:rgba(74,140,92,0.06);border-radius:12px;border:1px solid rgba(74,140,92,0.15);font-size:0.83rem;color:var(--text-mittel);display:flex;align-items:center;gap:10px;">
+      <span>📷</span>
+      <span>Foto aufnehmen und Daten manuell eintragen – alle Belege werden dauerhaft gespeichert.</span>
+    </div>
+
+    <div class="desktop-table card">
+      <div class="card-body" style="padding:0">
+        <table>
+          <thead><tr><th>Vorschau</th><th>Bezeichnung</th><th>Kategorie</th><th>Betrag</th><th>MwSt</th><th>Datum</th><th>Aktionen</th></tr></thead>
+          <tbody id="belege-table"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mobile-list" id="belege-mobile"></div>
+  </div>
+
+  <!-- ══ ZEITERFASSUNG ══ -->
+  <div class="page" id="page-zeiterfassung">
+    <div class="section-header">
+      <div class="section-title">Zeiterfassung</div>
+      <button class="btn btn-primary" onclick="openModal('neu-zeit-modal')">＋ Stunden erfassen</button>
+    </div>
+    <!-- Mitarbeiter Stundenkonten -->
+    <div id="zeiterfassung-konten" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px;"></div>
+    <!-- Einträge Tabelle -->
+    <div class="desktop-table card">
+      <div class="card-body" style="padding:0">
+        <table>
+          <thead><tr><th>Datum</th><th>Mitarbeiter</th><th>Auftrag</th><th>Von</th><th>Bis</th><th>Stunden</th><th>Notiz</th><th>Aktionen</th></tr></thead>
+          <tbody id="zeit-table"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mobile-list" id="zeit-mobile"></div>
+  </div>
+
+  <!-- ══ AUFGABEN ══ -->
+  <div class="page" id="page-aufgaben">
+    <div class="section-header">
+      <div class="section-title">Aufgabenliste</div>
+      <button class="btn btn-primary" onclick="openModal('neu-aufgabe-modal')">＋ Neue Aufgabe</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" id="aufgaben-grid" class="kal-2col">
+      <div>
+        <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-mittel);margin-bottom:10px;">⏳ Offen</div>
+        <div id="aufgaben-offen"></div>
+      </div>
+      <div>
+        <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-mittel);margin-bottom:10px;">✅ Erledigt</div>
+        <div id="aufgaben-erledigt"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FINANZEN ══ -->
+  <div class="page" id="page-finanzen">
+    <div class="section-header">
+      <div class="section-title">Finanzen</div>
+      <button class="btn btn-primary" onclick="openModal('neu-buchung-modal')">＋ Buchung erfassen</button>
+    </div>
+    <div class="finanzen-summary">
+      <div class="fin-card">
+        <div class="fin-betrag ein" id="fin-einnahmen">0 €</div>
+        <div class="fin-label">Einnahmen (Monat)</div>
+      </div>
+      <div class="fin-card">
+        <div class="fin-betrag aus" id="fin-ausgaben">0 €</div>
+        <div class="fin-label">Ausgaben (Monat)</div>
+      </div>
+      <div class="fin-card">
+        <div class="fin-betrag gewinn" id="fin-gewinn">0 €</div>
+        <div class="fin-label">Gewinn (Monat)</div>
+      </div>
+    </div>
+    <div class="desktop-table card">
+      <div class="card-body" style="padding:0">
+        <table>
+          <thead>
+            <tr><th>Datum</th><th>Beschreibung</th><th>Typ</th><th>Betrag</th><th>Aktionen</th></tr>
+          </thead>
+          <tbody id="finanzen-table"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mobile-list" id="finanzen-mobile"></div>
+  </div>
+</div>
+
+<!-- ══ MODALS ══ -->
+
+<!-- Neuer Auftrag -->
+<div class="modal-overlay" id="neu-auftrag-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🌱 Neuer Auftrag</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Auftragsbezeichnung</label><input id="a-name" placeholder="z.B. Rasenmähen Müller"></div>
+      <div class="form-group"><label>Kunde</label><select id="a-kunde"><option value="">– Kunde wählen –</option></select></div>
+      <div class="form-group"><label>Datum</label><input type="date" id="a-datum"></div>
+      <div class="form-group"><label>Arbeitsbeginn (Uhrzeit)</label><input type="time" id="a-uhrzeit" placeholder="07:00"></div>
+      <div class="form-group full">
+        <label>Mitarbeiter (Mehrfachauswahl)</label>
+        <div class="multi-select-wrap" id="a-ma-wrap"></div>
+        <div class="selected-tags" id="a-ma-tags"></div>
+      </div>
+      <div class="form-group full"><label>Beschreibung</label><textarea id="a-beschreibung" placeholder="Auftragsdetails..."></textarea></div>
+      <div class="form-group"><label>Status</label>
+        <select id="a-status">
+          <option value="Geplant">Geplant</option>
+          <option value="Aktiv">Aktiv</option>
+          <option value="Abgeschlossen">Abgeschlossen</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Preis (€)</label><input type="number" id="a-preis" placeholder="0.00"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('neu-auftrag-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="addAuftrag()">Auftrag speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Neuer Kunde -->
+<div class="modal-overlay" id="neu-kunde-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">👥 Neuer Kunde</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Vorname</label><input id="k-vorname" placeholder="Max"></div>
+      <div class="form-group"><label>Nachname</label><input id="k-nachname" placeholder="Mustermann"></div>
+      <div class="form-group full"><label>Adresse</label><input id="k-adresse" placeholder="Musterstraße 1, 12345 Stadt"></div>
+      <div class="form-group"><label>Telefon</label><input id="k-tel" placeholder="+49 123 456789"></div>
+      <div class="form-group"><label>E-Mail</label><input id="k-email" placeholder="max@beispiel.de"></div>
+      <div class="form-group full"><label>Notizen</label><textarea id="k-notiz" placeholder="Besondere Hinweise..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('neu-kunde-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="addKunde()">Kunde speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Neuer Mitarbeiter -->
+<div class="modal-overlay" id="neu-ma-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">👷 Neuer Mitarbeiter</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Vorname</label><input id="m-vorname" placeholder="Hans"></div>
+      <div class="form-group"><label>Nachname</label><input id="m-nachname" placeholder="Müller"></div>
+      <div class="form-group"><label>Rolle</label>
+        <select id="m-rolle">
+          <option>Vorarbeiter</option><option>Gärtner</option>
+          <option>Gehilfe</option><option>Fahrer</option><option>Azubi</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Telefon</label><input id="m-tel" placeholder="+49 ..."></div>
+      <div class="form-group"><label>Stundenlohn (€)</label><input type="number" id="m-lohn" placeholder="16.00"></div>
+      <div class="form-group"><label>Status</label>
+        <select id="m-status"><option>Anwesend</option><option>Abwesend</option><option>Urlaub</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('neu-ma-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="addMitarbeiter()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Neues Material -->
+<div class="modal-overlay" id="neu-material-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🪣 Material hinzufügen</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Materialname</label><input id="mat-name" placeholder="z.B. Rasensamen"></div>
+      <div class="form-group"><label>Einheit</label>
+        <select id="mat-einheit"><option>kg</option><option>Liter</option><option>Stück</option><option>Säcke</option><option>Rollen</option></select>
+      </div>
+      <div class="form-group"><label>Bestand</label><input type="number" id="mat-bestand" placeholder="50"></div>
+      <div class="form-group"><label>Mindestbestand</label><input type="number" id="mat-min" placeholder="10"></div>
+      <div class="form-group"><label>Kategorie</label>
+        <select id="mat-kat">
+          <option>Saatgut & Pflanzen</option><option>Dünger & Pflanzenschutz</option>
+          <option>Werkzeug & Zubehör</option><option>Erde & Substrate</option><option>Sonstiges</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('neu-material-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="addMaterial()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Neue Maschine -->
+<div class="modal-overlay" id="neu-maschine-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🚜 Gerät / Fahrzeug hinzufügen</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Bezeichnung</label><input id="mas-name" placeholder="z.B. Rasenmäher Pro 400"></div>
+      <div class="form-group"><label>Typ</label>
+        <select id="mas-typ">
+          <option>Rasenmäher</option><option>Heckenschere</option><option>Laubbläser</option>
+          <option>Traktor</option><option>Transporter</option><option>Sonstiges</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Status</label>
+        <select id="mas-status"><option>Einsatzbereit</option><option>In Wartung</option><option>Defekt</option></select>
+      </div>
+      <div class="form-group"><label>Letzte Wartung</label><input type="date" id="mas-wartung-letzt"></div>
+      <div class="form-group"><label>Nächste Wartung</label><input type="date" id="mas-wartung-next"></div>
+      <div class="form-group"><label>Notizen</label><input id="mas-notiz" placeholder="Besonderheiten..."></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('neu-maschine-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="addMaschine()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Neue Buchung -->
+<div class="modal-overlay" id="neu-buchung-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">💶 Buchung erfassen</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Beschreibung</label><input id="b-beschr" placeholder="z.B. Rechnung Müller"></div>
+      <div class="form-group"><label>Typ</label>
+        <select id="b-typ"><option value="Einnahme">Einnahme</option><option value="Ausgabe">Ausgabe</option></select>
+      </div>
+      <div class="form-group"><label>Betrag (€)</label><input type="number" id="b-betrag" placeholder="0.00"></div>
+      <div class="form-group"><label>Datum</label><input type="date" id="b-datum"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('neu-buchung-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="addBuchung()">Buchung speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Mitarbeiter bearbeiten -->
+<div class="modal-overlay" id="edit-ma-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">✏ Mitarbeiter bearbeiten</div>
+    <input type="hidden" id="edit-ma-id">
+    <div class="form-grid">
+      <div class="form-group"><label>Vorname</label><input id="edit-m-vorname"></div>
+      <div class="form-group"><label>Nachname</label><input id="edit-m-nachname"></div>
+      <div class="form-group"><label>Rolle</label>
+        <select id="edit-m-rolle">
+          <option>Vorarbeiter</option><option>Gärtner</option>
+          <option>Gehilfe</option><option>Fahrer</option><option>Azubi</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Telefon</label><input id="edit-m-tel"></div>
+      <div class="form-group"><label>Stundenlohn (€)</label><input type="number" id="edit-m-lohn"></div>
+      <div class="form-group"><label>Status</label>
+        <select id="edit-m-status">
+          <option>Anwesend</option><option>Abwesend</option><option>Urlaub</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('edit-ma-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveEditMa()">Änderungen speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Auftrag bearbeiten -->
+<div class="modal-overlay" id="edit-auftrag-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">✏ Auftrag bearbeiten</div>
+    <input type="hidden" id="edit-a-id">
+    <div class="form-grid">
+      <div class="form-group"><label>Auftragsbezeichnung</label><input id="edit-a-name"></div>
+      <div class="form-group"><label>Kunde</label><select id="edit-a-kunde"></select></div>
+      <div class="form-group"><label>Datum</label><input type="date" id="edit-a-datum"></div>
+      <div class="form-group"><label>Arbeitsbeginn (Uhrzeit)</label><input type="time" id="edit-a-uhrzeit"></div>
+      <div class="form-group full">
+        <label>Mitarbeiter (Mehrfachauswahl)</label>
+        <div class="multi-select-wrap" id="edit-a-ma-wrap"></div>
+        <div class="selected-tags" id="edit-a-ma-tags"></div>
+      </div>
+      <div class="form-group full"><label>Beschreibung</label><textarea id="edit-a-beschreibung"></textarea></div>
+      <div class="form-group"><label>Status</label>
+        <select id="edit-a-status">
+          <option>Geplant</option><option>Aktiv</option><option>Abgeschlossen</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Preis (€)</label><input type="number" id="edit-a-preis"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('edit-auftrag-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveEditAuftrag()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Kunde bearbeiten -->
+<div class="modal-overlay" id="edit-kunde-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">✏ Kunde bearbeiten</div>
+    <input type="hidden" id="edit-k-id">
+    <div class="form-grid">
+      <div class="form-group"><label>Name</label><input id="edit-k-name"></div>
+      <div class="form-group"><label>Telefon</label><input id="edit-k-tel"></div>
+      <div class="form-group full"><label>Adresse</label><input id="edit-k-adresse"></div>
+      <div class="form-group full"><label>E-Mail</label><input id="edit-k-email"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('edit-kunde-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveEditKunde()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Material bearbeiten -->
+<div class="modal-overlay" id="edit-material-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">✏ Material bearbeiten</div>
+    <input type="hidden" id="edit-mat-id">
+    <div class="form-grid">
+      <div class="form-group"><label>Materialname</label><input id="edit-mat-name"></div>
+      <div class="form-group"><label>Einheit</label>
+        <select id="edit-mat-einheit"><option>kg</option><option>Liter</option><option>Stück</option><option>Säcke</option><option>Rollen</option></select>
+      </div>
+      <div class="form-group"><label>Bestand</label><input type="number" id="edit-mat-bestand"></div>
+      <div class="form-group"><label>Mindestbestand</label><input type="number" id="edit-mat-min"></div>
+      <div class="form-group full"><label>Kategorie</label>
+        <select id="edit-mat-kat">
+          <option>Saatgut & Pflanzen</option><option>Dünger & Pflanzenschutz</option>
+          <option>Werkzeug & Zubehör</option><option>Erde & Substrate</option><option>Sonstiges</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('edit-material-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveEditMaterial()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Maschine bearbeiten -->
+<div class="modal-overlay" id="edit-maschine-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">✏ Gerät bearbeiten</div>
+    <input type="hidden" id="edit-mas-id">
+    <div class="form-grid">
+      <div class="form-group"><label>Bezeichnung</label><input id="edit-mas-name"></div>
+      <div class="form-group"><label>Typ</label>
+        <select id="edit-mas-typ">
+          <option>Rasenmäher</option><option>Heckenschere</option><option>Laubbläser</option>
+          <option>Traktor</option><option>Transporter</option><option>Sonstiges</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Status</label>
+        <select id="edit-mas-status"><option>Einsatzbereit</option><option>In Wartung</option><option>Defekt</option></select>
+      </div>
+      <div class="form-group"><label>Letzte Wartung</label><input type="date" id="edit-mas-letzt"></div>
+      <div class="form-group"><label>Nächste Wartung</label><input type="date" id="edit-mas-next"></div>
+      <div class="form-group"><label>Notizen</label><input id="edit-mas-notiz"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('edit-maschine-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveEditMaschine()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Buchung bearbeiten -->
+<div class="modal-overlay" id="edit-buchung-modal">
+  <div class="modal">
+    <div class="modal-title">✏ Buchung bearbeiten</div>
+    <input type="hidden" id="edit-b-id">
+    <div class="form-grid">
+      <div class="form-group full"><label>Beschreibung</label><input id="edit-b-beschr"></div>
+      <div class="form-group"><label>Typ</label>
+        <select id="edit-b-typ"><option value="Einnahme">Einnahme</option><option value="Ausgabe">Ausgabe</option></select>
+      </div>
+      <div class="form-group"><label>Betrag (€)</label><input type="number" id="edit-b-betrag"></div>
+      <div class="form-group"><label>Datum</label><input type="date" id="edit-b-datum"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('edit-buchung-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveEditBuchung()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Neue Rechnung -->
+<div class="modal-overlay" id="neu-rechnung-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🧾 Neue Rechnung</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Rechnungsnummer</label><input id="r-nr" placeholder="2025-001"></div>
+      <div class="form-group"><label>Kunde</label><select id="r-kunde"><option value="">– Kunde wählen –</option></select></div>
+      <div class="form-group"><label>Datum</label><input type="date" id="r-datum"></div>
+      <div class="form-group"><label>Fällig am</label><input type="date" id="r-faellig"></div>
+      <div class="form-group full"><label>Leistungsbeschreibung</label><textarea id="r-leistung" placeholder="z.B. Rasenpflege April, Heckenschnitt..."></textarea></div>
+      <div class="form-group"><label>Nettobetrag (€)</label><input type="number" id="r-netto" placeholder="0.00" oninput="calcRechnung()"></div>
+      <div class="form-group"><label>MwSt. (%)</label><select id="r-mwst" onchange="calcRechnung()"><option value="19">19%</option><option value="7">7%</option><option value="0">0%</option></select></div>
+      <div class="form-group"><label>MwSt. Betrag</label><input id="r-mwst-betrag" readonly style="background:rgba(26,58,42,0.04);"></div>
+      <div class="form-group"><label>Bruttobetrag (€)</label><input id="r-brutto" readonly style="background:rgba(26,58,42,0.04);font-weight:700;"></div>
+      <div class="form-group"><label>Status</label>
+        <select id="r-status"><option>Offen</option><option>Bezahlt</option><option>Überfällig</option><option>Storniert</option></select>
+      </div>
+      <div class="form-group full"><label>Notizen</label><input id="r-notiz" placeholder="Interne Notizen..."></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('neu-rechnung-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="addRechnung()">Rechnung speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Rechnung bearbeiten -->
+<div class="modal-overlay" id="edit-rechnung-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">✏ Rechnung bearbeiten</div>
+    <input type="hidden" id="edit-r-id">
+    <div class="form-grid">
+      <div class="form-group"><label>Rechnungsnummer</label><input id="edit-r-nr"></div>
+      <div class="form-group"><label>Kunde</label><select id="edit-r-kunde"></select></div>
+      <div class="form-group"><label>Datum</label><input type="date" id="edit-r-datum"></div>
+      <div class="form-group"><label>Fällig am</label><input type="date" id="edit-r-faellig"></div>
+      <div class="form-group full"><label>Leistungsbeschreibung</label><textarea id="edit-r-leistung"></textarea></div>
+      <div class="form-group"><label>Nettobetrag (€)</label><input type="number" id="edit-r-netto" oninput="calcEditRechnung()"></div>
+      <div class="form-group"><label>MwSt. (%)</label><select id="edit-r-mwst" onchange="calcEditRechnung()"><option value="19">19%</option><option value="7">7%</option><option value="0">0%</option></select></div>
+      <div class="form-group"><label>MwSt. Betrag</label><input id="edit-r-mwst-betrag" readonly style="background:rgba(26,58,42,0.04);"></div>
+      <div class="form-group"><label>Bruttobetrag (€)</label><input id="edit-r-brutto" readonly style="background:rgba(26,58,42,0.04);font-weight:700;"></div>
+      <div class="form-group"><label>Status</label>
+        <select id="edit-r-status"><option>Offen</option><option>Bezahlt</option><option>Überfällig</option><option>Storniert</option></select>
+      </div>
+      <div class="form-group full"><label>Notizen</label><input id="edit-r-notiz"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('edit-rechnung-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveEditRechnung()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Neuer Beleg -->
+<div class="modal-overlay" id="neu-beleg-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📸 Beleg erfassen</div>
+
+    <!-- Foto -->
+    <div class="form-group full" style="margin-bottom:14px;">
+      <label>Foto des Belegs (optional)</label>
+      <div id="beleg-preview-wrap"
+        style="width:100%;min-height:148px;border:2px dashed rgba(74,140,92,0.3);border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;background:rgba(74,140,92,0.04);transition:all 0.2s;"
+        onclick="document.getElementById('beleg-file-input').click()"
+        onmouseenter="this.style.borderColor='var(--gruen-hell)'"
+        onmouseleave="this.style.borderColor='rgba(74,140,92,0.3)'">
+        <div id="beleg-preview-placeholder" style="text-align:center;padding:20px;pointer-events:none;">
+          <div style="font-size:2.6rem;margin-bottom:8px;">📷</div>
+          <div style="font-size:0.88rem;font-weight:700;color:var(--gruen-dunkel);">Tippen zum Fotografieren</div>
+          <div style="font-size:0.74rem;margin-top:4px;color:var(--text-mittel);">Kamera · Galerie · Datei</div>
+        </div>
+        <img id="beleg-preview-img" style="display:none;width:100%;max-height:220px;object-fit:contain;" alt="Vorschau">
+      </div>
+      <input type="file" id="beleg-file-input" accept="image/*" capture="environment" style="display:none" onchange="previewBeleg(this)">
+    </div>
+
+    <!-- Formularfelder -->
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Bezeichnung</label>
+        <input id="b2-name" placeholder="z.B. Tankquittung, Baumarkt-Rechnung">
+      </div>
+      <div class="form-group">
+        <label>Lieferant / Händler</label>
+        <input id="b2-lieferant" placeholder="z.B. Aral, OBI…">
+      </div>
+      <div class="form-group">
+        <label>Kategorie</label>
+        <select id="b2-kat">
+          <option>Kraftstoff</option><option>Material</option><option>Werkzeug</option>
+          <option>Fahrzeug</option><option>Büro</option><option>Sonstiges</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Gesamtbetrag (€)</label>
+        <input type="number" id="b2-betrag" placeholder="0.00" step="0.01">
+      </div>
+      <div class="form-group">
+        <label>MwSt.</label>
+        <select id="b2-mwst">
+          <option value="">– unbekannt –</option>
+          <option value="19">19%</option>
+          <option value="7">7%</option>
+          <option value="0">0% / keine</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Datum</label>
+        <input type="date" id="b2-datum">
+      </div>
+      <div class="form-group full">
+        <label>Notiz (optional)</label>
+        <input id="b2-notiz" placeholder="Weitere Hinweise…">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeBelegModal()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="addBeleg()">💾 Beleg speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Beleg Vollbild -->
+<div class="modal-overlay" id="beleg-fullscreen-modal">
+  <div class="modal" style="background:#000;padding:10px;border-radius:16px;max-width:96vw;">
+    <div class="modal-handle" style="background:rgba(255,255,255,0.3)"></div>
+    <img id="beleg-fullscreen-img" style="width:100%;max-height:80vh;object-fit:contain;border-radius:10px;" alt="Beleg">
+    <div style="text-align:center;margin-top:10px;">
+      <button class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.3)" onclick="closeModal('beleg-fullscreen-modal')">Schließen</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Zeiterfassung Modal -->
+<div class="modal-overlay" id="neu-zeit-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">⏱ Stunden erfassen</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Datum</label><input type="date" id="z-datum"></div>
+      <div class="form-group"><label>Mitarbeiter</label><select id="z-ma"><option value="">– wählen –</option></select></div>
+      <div class="form-group"><label>Auftrag (optional)</label><select id="z-auftrag"><option value="">– kein Auftrag –</option></select></div>
+      <div class="form-group"><label>Von (Uhrzeit)</label><input type="time" id="z-von"></div>
+      <div class="form-group"><label>Bis (Uhrzeit)</label><input type="time" id="z-bis"></div>
+      <div class="form-group"><label>Stunden (manuell)</label><input type="number" id="z-stunden" step="0.25" placeholder="z.B. 7.5"></div>
+      <div class="form-group full"><label>Notiz</label><input id="z-notiz" placeholder="Optional…"></div>
+    </div>
+    <div style="font-size:0.78rem;color:var(--text-mittel);margin-top:8px;" id="z-berechnet"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('neu-zeit-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="addZeit()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Aufgabe Modal -->
+<div class="modal-overlay" id="neu-aufgabe-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">✅ Neue Aufgabe</div>
+    <div class="form-grid">
+      <div class="form-group full"><label>Aufgabe</label><input id="auf-titel" placeholder="Was muss erledigt werden?"></div>
+      <div class="form-group"><label>Priorität</label>
+        <select id="auf-prio">
+          <option value="hoch">🔴 Hoch</option>
+          <option value="mittel" selected>🟡 Mittel</option>
+          <option value="niedrig">🟢 Niedrig</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Fällig am</label><input type="date" id="auf-faellig"></div>
+      <div class="form-group"><label>Zuständig</label><select id="auf-ma"><option value="">– alle –</option></select></div>
+      <div class="form-group full"><label>Notiz</label><input id="auf-notiz" placeholder="Optional…"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('neu-aufgabe-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="addAufgabe()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Passwort Modal -->
+<div class="modal-overlay" id="pw-modal" style="z-index:500;">
+  <div class="modal" style="text-align:center;">
+    <div style="font-size:3rem;margin-bottom:12px;">🔐</div>
+    <div class="modal-title" style="text-align:center;">Lindau Garten- und Landschaftsbau</div>
+    <p style="font-size:0.85rem;color:var(--text-mittel);margin-bottom:16px;">Bitte PIN eingeben um fortzufahren</p>
+    <div id="pw-dots" style="display:flex;justify-content:center;gap:12px;margin-bottom:20px;">
+      <div class="pw-dot"></div><div class="pw-dot"></div>
+      <div class="pw-dot"></div><div class="pw-dot"></div>
+    </div>
+    <div id="pw-numpad" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:220px;margin:0 auto 16px;"></div>
+    <div id="pw-error" style="color:var(--rot-warn);font-size:0.82rem;min-height:20px;"></div>
+    <div style="margin-top:14px;">
+      <button class="btn btn-outline btn-sm" onclick="openModal('pw-change-modal')">🔧 PIN ändern</button>
+    </div>
+  </div>
+</div>
+
+<!-- PIN Ändern Modal -->
+<div class="modal-overlay" id="pw-change-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🔧 PIN ändern</div>
+    <div class="form-grid">
+      <div class="form-group full"><label>Aktueller PIN (leer lassen beim ersten Mal)</label>
+        <input type="password" id="pw-old" placeholder="Aktueller PIN" maxlength="4">
+      </div>
+      <div class="form-group"><label>Neuer PIN (4-stellig)</label>
+        <input type="password" id="pw-new1" placeholder="Neuer PIN" maxlength="4">
+      </div>
+      <div class="form-group"><label>PIN wiederholen</label>
+        <input type="password" id="pw-new2" placeholder="PIN wiederholen" maxlength="4">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('pw-change-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="savePIN()">PIN speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Rechnungs-Email Modal -->
+<div class="modal-overlay" id="email-rechnung-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📧 Rechnung per E-Mail</div>
+    <div class="form-grid">
+      <div class="form-group full"><label>An (E-Mail)</label><input type="email" id="email-to" placeholder="kunde@beispiel.de"></div>
+      <div class="form-group full"><label>Betreff</label><input id="email-betreff" placeholder="Rechnung Nr. …"></div>
+      <div class="form-group full"><label>Nachricht</label>
+        <textarea id="email-text" rows="5" placeholder="Sehr geehrte Damen und Herren…"></textarea>
+      </div>
+    </div>
+    <div style="font-size:0.78rem;color:var(--text-mittel);margin-top:8px;padding:10px;background:rgba(74,140,92,0.07);border-radius:8px;">
+      💡 Öffnet deinen E-Mail-Client mit vorausgefüllter Nachricht. Die Rechnung kannst du als PDF anhängen (via Drucken → Als PDF speichern).
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('email-rechnung-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="sendEmailRechnung()">📧 E-Mail öffnen</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+
+
+
+
+
+
+
+
+<script>
+/* ── PWA: Generate App Icon ── */
+function generateIcon(size) {
+  var canvas = document.createElement('canvas');
+  canvas.width = size; canvas.height = size;
+  var ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#1a3a2a';
+  if(ctx.roundRect) ctx.roundRect(0,0,size,size,size*0.22);
+  else { ctx.beginPath(); ctx.rect(0,0,size,size); }
+  ctx.fill();
+  ctx.font = (size*0.5)+'px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('\uD83C\uDF3F', size/2, size/2);
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.font = 'bold '+(size*0.15)+'px sans-serif';
+  ctx.fillText('LG', size/2, size*0.82);
+  return canvas.toDataURL('image/png');
+}
+
+/* ── PWA: Inline Manifest ── */
+(function(){
+  var icons = [
+    {src: generateIcon(192), sizes:'192x192', type:'image/png', purpose:'any maskable'},
+    {src: generateIcon(512), sizes:'512x512', type:'image/png', purpose:'any maskable'}
+  ];
+  var manifest = {
+    name: 'Lindau Garten- und Landschaftsbau',
+    short_name: 'Lindau Garten',
+    description: 'Betriebsverwaltung',
+    start_url: './',
+    display: 'standalone',
+    orientation: 'portrait-primary',
+    background_color: '#1a3a2a',
+    theme_color: '#1a3a2a',
+    icons: icons
+  };
+  var blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+  var el = document.getElementById('pwa-manifest');
+  if(el) el.href = URL.createObjectURL(blob);
+  var icon = generateIcon(180);
+  var appleEl = document.getElementById('apple-icon');
+  if(appleEl) appleEl.href = icon;
+})();
+
+/* ── PWA: Service Worker (Offline-Cache) ── */
+if('serviceWorker' in navigator) {
+  var swCode = [
+    "var CACHE='lindau-v1';",
+    "self.addEventListener('install',function(e){",
+    "  e.waitUntil(caches.open(CACHE).then(function(c){",
+    "    return c.add(self.registration.scope);",
+    "  }));",
+    "  self.skipWaiting();",
+    "});",
+    "self.addEventListener('activate',function(e){",
+    "  e.waitUntil(caches.keys().then(function(keys){",
+    "    return Promise.all(keys.filter(function(k){return k!==CACHE;}).map(function(k){return caches.delete(k);}));",
+    "  }));",
+    "  self.clients.claim();",
+    "});",
+    "self.addEventListener('fetch',function(e){",
+    "  if(e.request.method!=='GET') return;",
+    "  e.respondWith(caches.match(e.request).then(function(cached){",
+    "    var fresh=fetch(e.request).then(function(resp){",
+    "      if(resp.ok){var cl=resp.clone();caches.open(CACHE).then(function(c){c.put(e.request,cl);});}",
+    "      return resp;",
+    "    }).catch(function(){return cached;});",
+    "    return cached||fresh;",
+    "  }));",
+    "});"
+  ].join('\n');
+  var swBlob = new Blob([swCode], {type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(swBlob), {scope:'./'})
+    .catch(function(e){ console.log('SW:', e); });
+}
+
+/* ── PWA: Install Prompt ── */
+var deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  var btn = document.getElementById('pwa-install-btn');
+  if(btn) btn.style.display = 'inline-flex';
+});
+window.addEventListener('appinstalled', function() {
+  var btn = document.getElementById('pwa-install-btn');
+  if(btn) btn.style.display = 'none';
+  showToast('App installiert!');
+});
+
+function installPWA() {
+  if(deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(r){
+      if(r.outcome==='accepted') showToast('App wird installiert...');
+      deferredPrompt = null;
+    });
+  } else {
+    showIOSInstallGuide();
+  }
+}
+
+/* ── iOS Install Guide ── */
+function showIOSInstallGuide() {
+  if(window.navigator.standalone) { showToast('App ist bereits installiert!'); return; }
+  var existing = document.getElementById('ios-guide');
+  if(existing) { existing.remove(); return; }
+  var div = document.createElement('div');
+  div.id = 'ios-guide';
+  div.style.cssText = 'position:fixed;inset:0;background:rgba(26,42,21,0.75);z-index:9999;' +
+    'display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px);';
+  var html = '<div style="background:#fafaf7;border-radius:22px 22px 0 0;padding:22px 20px 40px;width:100%;max-width:480px;">';
+  html += '<div style="width:36px;height:4px;background:rgba(26,58,42,.15);border-radius:2px;margin:0 auto 16px;"></div>';
+  html += '<div style="font-size:1.2rem;font-weight:900;color:#1a3a2a;margin-bottom:6px;">App installieren</div>';
+  html += '<p style="font-size:0.83rem;color:#3d4a35;margin-bottom:18px;line-height:1.5;">So installierst du die App auf deinem iPhone:</p>';
+  html += '<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">';
+  html += '<div style="display:flex;gap:12px;padding:11px 13px;background:rgba(74,140,92,0.08);border-radius:11px;">';
+  html += '<span style="font-size:1.4rem;">1</span>';
+  html += '<span style="font-size:0.83rem;color:#1a2015;">Tippe in Safari unten auf das <strong>Teilen-Symbol</strong> &#x2191;</span></div>';
+  html += '<div style="display:flex;gap:12px;padding:11px 13px;background:rgba(74,140,92,0.08);border-radius:11px;">';
+  html += '<span style="font-size:1.4rem;">2</span>';
+  html += '<span style="font-size:0.83rem;color:#1a2015;">Scrolle und tippe auf <strong>"Zum Home-Bildschirm"</strong></span></div>';
+  html += '<div style="display:flex;gap:12px;padding:11px 13px;background:rgba(74,140,92,0.08);border-radius:11px;">';
+  html += '<span style="font-size:1.4rem;">3</span>';
+  html += '<span style="font-size:0.83rem;color:#1a2015;">Tippe oben rechts auf <strong>"Hinzufügen"</strong> &#x2013; fertig!</span></div>';
+  html += '</div>';
+  html += '<button onclick="document.getElementById(\'ios-guide\').remove()" ';
+  html += 'style="width:100%;padding:13px;background:#1a3a2a;color:#fff;border:none;border-radius:12px;';
+  html += 'font-size:0.9rem;font-weight:700;cursor:pointer;">Verstanden</button>';
+  html += '</div>';
+  div.innerHTML = html;
+  div.addEventListener('click', function(e){ if(e.target===div) div.remove(); });
+  document.body.appendChild(div);
+}
+
+/* ── Auto-show guide on first iOS visit ── */
+document.addEventListener('DOMContentLoaded', function() {
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  var isStandalone = window.navigator.standalone;
+  if(isIOS && !isStandalone) {
+    var btn = document.getElementById('pwa-install-btn');
+    if(btn) btn.style.display = 'inline-flex';
+    if(!localStorage.getItem('pwa_shown')) {
+      setTimeout(function(){ showIOSInstallGuide(); localStorage.setItem('pwa_shown','1'); }, 2500);
+    }
+  }
+});
+</script>
+
+
+<script>
+// Service Worker deaktiviert
+
+// ── PWA INSTALL BANNER ──
+deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('pwa-banner').style.display = 'flex';
+});
+
+function installPWA() {
+  if(deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choice => {
+      deferredPrompt = null;
+      document.getElementById('pwa-banner').style.display = 'none';
+      if(choice.outcome === 'accepted') showToast('✅ App installiert!');
+    });
+  }
+}
+
+function closePWABanner() {
+  document.getElementById('pwa-banner').style.display = 'none';
+  localStorage.setItem('pwa_banner_dismissed', '1');
+}
+
+// Show iOS install hint if on Safari iOS
+window.addEventListener('load', () => {
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  const dismissed = localStorage.getItem('ios_hint_dismissed');
+  if(isIOS && !isInStandaloneMode && !dismissed) {
+    document.getElementById('ios-hint').style.display = 'flex';
+  }
+});
+
+function closeIOSHint() {
+  document.getElementById('ios-hint').style.display = 'none';
+  localStorage.setItem('ios_hint_dismissed', '1');
+}
+</script>
+
+<!-- Android Install Banner -->
+<div id="pwa-banner" style="display:none;position:fixed;bottom:calc(70px + env(safe-area-inset-bottom));left:12px;right:12px;background:#1a3a2a;color:#fff;border-radius:16px;padding:14px 16px;z-index:500;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+  <div style="font-size:1.8rem;">🌿</div>
+  <div style="flex:1;">
+    <div style="font-weight:700;font-size:0.9rem;">App installieren</div>
+    <div style="font-size:0.75rem;opacity:0.8;margin-top:2px;">Lindau Garten zum Homescreen hinzufügen</div>
+  </div>
+  <button onclick="installPWA()" style="background:#6bbf7a;border:none;color:#fff;padding:8px 16px;border-radius:10px;font-weight:700;cursor:pointer;font-size:0.84rem;">Installieren</button>
+  <button onclick="closePWABanner()" style="background:none;border:none;color:rgba(255,255,255,0.6);font-size:1.2rem;cursor:pointer;padding:4px;">✕</button>
+</div>
+
+<!-- iOS Safari Install Hint -->
+<div id="ios-hint" style="display:none;position:fixed;bottom:calc(70px + env(safe-area-inset-bottom));left:12px;right:12px;background:#1a3a2a;color:#fff;border-radius:16px;padding:14px 16px;z-index:500;flex-direction:column;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div style="font-size:1.8rem;">🌿</div>
+    <div style="flex:1;">
+      <div style="font-weight:700;font-size:0.9rem;">App auf Homescreen installieren</div>
+      <div style="font-size:0.75rem;opacity:0.8;margin-top:2px;">Einmalige Einrichtung – dann wie eine echte App!</div>
+    </div>
+    <button onclick="closeIOSHint()" style="background:none;border:none;color:rgba(255,255,255,0.6);font-size:1.2rem;cursor:pointer;padding:4px;">✕</button>
+  </div>
+  <div style="background:rgba(255,255,255,0.1);border-radius:12px;padding:12px;font-size:0.82rem;line-height:1.7;">
+    <div>1. Tippe unten auf <strong>Teilen</strong> <span style="background:rgba(255,255,255,0.2);padding:2px 7px;border-radius:6px;">⎙</span></div>
+    <div>2. Wähle <strong>„Zum Home-Bildschirm"</strong></div>
+    <div>3. Tippe oben rechts auf <strong>„Hinzufügen"</strong></div>
+  </div>
+  <div style="text-align:center;font-size:0.72rem;opacity:0.55;">Funktioniert nur in Safari · Nicht in Chrome oder Firefox</div>
+</div>
+
+</body>
+</html>
