@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lindau Garten">
+<meta name="theme-color" content="#1a3a2a">
+<title>Lindau Garten- und Landschaftsbau</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gd:#1a3a2a;--gm:#2d5a3d;--gh:#4a8c5c;--gf:#6bbf7a;--sand:#f5ede0;--w:#fafaf7;--td:#1a2015;--tm:#3d4a35;--ak:#c8a84b;--rot:#c0392b;--blau:#2980b9;--sh:0 2px 16px rgba(26,58,42,.12);--r:14px;--tr:.25s cubic-bezier(.4,0,.2,1)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--td);overflow-x:hidden;-webkit-text-size-adjust:100%}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(26,58,42,.2);border-radius:4px}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;left:0;height:100vh;width:240px;background:var(--gd);display:flex;flex-direction:column;z-index:200;box-shadow:4px 0 30px rgba(0,0,0,.18);overflow-y:auto;transition:transform var(--tr)}
+.sidebar-logo{padding:22px 18px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.logo-icon{font-size:1.7rem}
+.logo-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:900;color:#fff;line-height:1.2;margin-top:4px}
+.logo-title span{color:var(--gf)}
+.logo-sub{font-size:.6rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px}
+.nav-section{padding:10px 0 4px}
+.nav-label{font-size:.6rem;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.28);padding:0 18px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:11px 18px;cursor:pointer;color:rgba(255,255,255,.6);font-size:.86rem;font-weight:500;border-left:3px solid transparent;transition:all var(--tr);min-height:44px}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,.05)}
+.nav-item.active{color:var(--gf);border-left-color:var(--gf);background:rgba(107,191,122,.1)}
+.nav-icon{font-size:1rem;width:20px;text-align:center}
+.sidebar-footer{margin-top:auto;padding:12px 18px;border-top:1px solid rgba(255,255,255,.07);font-size:.65rem;color:rgba(255,255,255,.22)}
+
+/* MAIN */
+.main{margin-left:240px;min-height:100vh;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(245,237,224,.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(26,58,42,.08);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-shrink:0}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.topbar-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--gd);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-date{font-size:.75rem;color:var(--tm);background:rgba(26,58,42,.07);padding:5px 12px;border-radius:20px;white-space:nowrap}
+.content{flex:1;overflow-y:auto;padding:16px 20px 80px}
+
+/* PAGES */
+.page{display:none;animation:fadeIn .25s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:10px;border:none;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.82rem;cursor:pointer;transition:all var(--tr);min-height:40px;white-space:nowrap}
+.btn-p{background:var(--gh);color:#fff}.btn-p:hover{background:var(--gm)}
+.btn-o{background:transparent;border:2px solid var(--gh);color:var(--gh)}.btn-o:hover{background:var(--gh);color:#fff}
+.btn-d{background:rgba(192,57,43,.1);color:var(--rot);border:none}.btn-d:hover{background:var(--rot);color:#fff}
+.btn-sm{padding:6px 11px;font-size:.76rem;border-radius:8px;min-height:34px}
+.btn:active{transform:scale(.97)}
+
+/* CARDS */
+.card{background:var(--w);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-bottom:16px}
+.card-header{padding:14px 16px 12px;border-bottom:1px solid rgba(26,58,42,.07);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--gd)}
+.card-body{padding:14px 16px}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.stat-card{background:var(--w);border-radius:var(--r);padding:14px 16px;box-shadow:var(--sh);border-left:4px solid var(--gh)}
+.stat-card.warn{border-left-color:var(--ak)}.stat-card.info{border-left-color:var(--blau)}.stat-card.alert{border-left-color:var(--rot)}
+.stat-icon{font-size:1.3rem;margin-bottom:6px}
+.stat-val{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:var(--gd);line-height:1}
+.stat-lbl{font-size:.72rem;color:var(--tm);margin-top:3px;font-weight:500}
+
+/* BADGES */
+.badge{font-size:.65rem;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;display:inline-block}
+.badge-a{background:rgba(107,191,122,.15);color:var(--gh)}
+.badge-g{background:rgba(200,168,75,.15);color:#8b6240}
+.badge-e{background:rgba(176,184,168,.2);color:#6a7460}
+.badge-d{background:rgba(192,57,43,.12);color:var(--rot)}
+
+/* LIST ITEMS */
+.li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(26,58,42,.06)}
+.li:last-child{border-bottom:none}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.li-name{font-weight:600;font-size:.86rem;color:var(--gd);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li-detail{font-size:.73rem;color:var(--tm);margin-top:1px}
+
+/* TEAM */
+.team-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(26,58,42,.06)}
+.team-item:last-child{border-bottom:none}
+.avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;color:#fff;flex-shrink:0}
+
+/* SECTION HEADER */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px;flex-wrap:wrap}
+.sec-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--gd)}
+
+/* TABLES */
+.tbl-wrap{background:var(--w);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-bottom:16px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:9px 12px;font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--tm);border-bottom:2px solid rgba(26,58,42,.1);background:rgba(26,58,42,.03)}
+td{padding:10px 12px;font-size:.83rem;border-bottom:1px solid rgba(26,58,42,.06);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(107,191,122,.04)}
+.td-act{display:flex;gap:5px;flex-wrap:wrap}
+
+/* MOBILE CARDS */
+.mob-card{background:var(--w);border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:var(--sh);border-left:4px solid var(--gh)}
+.mob-card.warn{border-left-color:var(--ak)}.mob-card.danger{border-left-color:var(--rot)}
+.mob-title{font-weight:700;font-size:.92rem;color:var(--gd);margin-bottom:6px}
+.mob-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:.8rem}
+.mob-lbl{color:var(--tm);font-weight:500}
+.mob-val{color:var(--td);font-weight:600;text-align:right;max-width:60%}
+.mob-act{display:flex;gap:7px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(26,58,42,.07);flex-wrap:wrap}
+.mob-act .btn{flex:1;justify-content:center}
+
+/* MODAL */
+.mbg{display:none;position:fixed;inset:0;background:rgba(26,42,21,.6);backdrop-filter:blur(4px);z-index:300;align-items:flex-end;justify-content:center}
+.mbg.open{display:flex}
+.modal{background:var(--w);border-radius:20px 20px 0 0;padding:14px 18px 36px;width:100%;max-width:580px;max-height:92vh;overflow-y:auto;animation:sheetUp .3s cubic-bezier(.34,1.2,.64,1)}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
+.mhandle{width:36px;height:4px;background:rgba(14,26,15,.12);border-radius:2px;margin:0 auto 16px}
+.mtitle{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--gd);margin-bottom:16px}
+.mfooter{display:flex;gap:10px;margin-top:18px}
+.mfooter .btn{flex:1;justify-content:center;padding:13px}
+
+/* FORMS */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fi{display:flex;flex-direction:column;gap:5px}
+.fi.full{grid-column:1/-1}
+label{font-size:.76rem;font-weight:600;color:var(--tm)}
+input,select,textarea{padding:11px 13px;border:2px solid rgba(26,58,42,.12);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.94rem;color:var(--td);background:var(--w);outline:none;transition:all var(--tr);min-height:44px;width:100%;-webkit-appearance:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%233d4a35' d='M5 6L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px}
+input:focus,select:focus,textarea:focus{border-color:var(--gh);box-shadow:0 0 0 3px rgba(74,140,92,.12)}
+textarea{resize:vertical;min-height:76px}
+input[readonly]{background:rgba(26,58,42,.04)}
+
+/* MULTI SELECT */
+.ms{border:2px solid rgba(26,58,42,.12);border-radius:10px;overflow:hidden;max-height:140px;overflow-y:auto}
+.ms-opt{display:flex;align-items:center;gap:10px;padding:10px 13px;cursor:pointer;font-size:.86rem;transition:background var(--tr);min-height:42px}
+.ms-opt:hover{background:rgba(107,191,122,.1)}
+.ms-opt input{width:17px;height:17px;min-height:unset;cursor:pointer;accent-color:var(--gh)}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.tag{background:rgba(74,140,92,.12);color:var(--gd);border-radius:20px;padding:2px 9px;font-size:.72rem;font-weight:600}
+
+/* LAGER */
+.lager-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;background:rgba(26,58,42,.03);margin-bottom:8px;border:1px solid rgba(26,58,42,.07)}
+.bar-bg{height:6px;background:rgba(26,58,42,.1);border-radius:4px;overflow:hidden;flex:1;min-width:60px}
+.bar{height:100%;border-radius:4px;transition:width .5s ease}
+.bar-ok{background:var(--gf)}.bar-warn{background:var(--ak)}.bar-crit{background:var(--rot)}
+
+/* FINANZEN */
+.fin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.fin-card{background:var(--w);border-radius:var(--r);padding:16px;box-shadow:var(--sh);text-align:center}
+.fin-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900}
+
+/* KALENDER */
+.kal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center}
+.kal-h{font-size:.65rem;font-weight:700;color:var(--tm);padding:4px 0}
+.kal-day{aspect-ratio:1;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.78rem;cursor:pointer;transition:background var(--tr)}
+.kal-day:hover{background:rgba(107,191,122,.15)}
+.kal-day.today{background:var(--gh);color:#fff;font-weight:700}
+.kal-day.has-ev::after{content:'';display:block;width:4px;height:4px;background:var(--ak);border-radius:50%;margin-top:1px}
+.kal-day.grau{color:#c0c8b8}
+
+/* WETTER */
+.wetter{background:linear-gradient(135deg,var(--gm),var(--gd));border-radius:var(--r);padding:14px 16px;color:#fff;margin-bottom:16px;display:flex;align-items:center;gap:14px}
+
+/* STUNDENKONTO */
+.sk-card{background:var(--w);border-radius:var(--r);padding:14px 16px;box-shadow:var(--sh);border-top:4px solid var(--gh)}
+.sk-val{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:var(--gd);line-height:1}
+
+/* AUFGABEN */
+.auf-card{background:var(--w);border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:var(--sh);border-left:4px solid var(--gh)}
+.auf-card.hoch{border-left-color:var(--rot)}.auf-card.mittel{border-left-color:var(--ak)}.auf-card.done{opacity:.5;border-left-color:#b0b8a8}
+
+/* BELEG */
+.drop-zone{width:100%;min-height:148px;border:2px dashed rgba(74,140,92,.3);border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;background:rgba(74,140,92,.04);transition:all var(--tr);margin-bottom:14px}
+.drop-zone:hover{border-color:var(--gh)}
+
+/* PIN */
+.pw-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--gh);background:transparent;transition:background .2s}
+.pw-dot.filled{background:var(--gh)}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--gd);color:#fff;padding:11px 22px;border-radius:50px;font-size:.84rem;font-weight:600;opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);z-index:999;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* HAMBURGER */
+.hamburger{display:none;flex-direction:column;gap:5px;width:38px;height:38px;background:var(--gd);border:none;border-radius:9px;cursor:pointer;align-items:center;justify-content:center;padding:8px}
+.hamburger span{display:block;width:20px;height:2px;background:#fff;border-radius:2px;transition:all var(--tr)}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199}
+.overlay.open{display:block}
+
+/* BOTTOM NAV */
+.bnav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--gd);z-index:150;padding:4px 0 8px;box-shadow:0 -4px 20px rgba(0,0,0,.2)}
+.bn-items{display:flex;justify-content:space-around}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:2px;color:rgba(255,255,255,.45);font-size:.58rem;font-weight:700;cursor:pointer;padding:6px 6px;border-radius:8px;transition:all var(--tr);min-width:44px;text-align:center}
+.bn-item.active{color:var(--gf)}
+.bn-icon{font-size:1.3rem;line-height:1}
+
+/* IOS INSTALL HINT */
+.ios-hint{display:none;position:fixed;bottom:calc(70px + env(safe-area-inset-bottom,0px));left:12px;right:12px;background:var(--gd);color:#fff;border-radius:16px;padding:14px 16px;z-index:500;flex-direction:column;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.ios-hint.show{display:flex}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);width:280px}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .hamburger{display:flex}
+  .bnav{display:block}
+  .topbar{padding:8px 12px}
+  .topbar-date{display:none}
+  .content{padding:12px 12px 76px}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .dash-grid{grid-template-columns:1fr}
+  .fin-grid{grid-template-columns:1fr}
+  .kal-cols{grid-template-columns:1fr!important}
+  .lager-cols{grid-template-columns:1fr!important}
+  .auf-cols{grid-template-columns:1fr!important}
+  .fg{grid-template-columns:1fr}
+  .fi.full{grid-column:1}
+  .desktop-only{display:none!important}
+  .mobile-only{display:block!important}
+  .wetter .w-tags{display:none}
+  .toast{bottom:80px}
+}
+@media(min-width:769px){
+  .mobile-only{display:none!important}
+  .mbg{align-items:center}
+  .modal{border-radius:18px;max-height:86vh}
+  @keyframes sheetUp{from{opacity:0;transform:scale(.94)translateY(16px)}to{opacity:1;transform:none}}
+  .toast{bottom:28px;left:auto;right:28px;transform:translateY(60px);border-radius:10px}
+  .toast.show{transform:translateY(0)}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🌿</div>
+    <div class="logo-title">Lindau <span>Garten</span></div>
+    <div class="logo-sub">Garten- und Landschaftsbau</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Übersicht</div>
+    <div class="nav-item active" onclick="nav('dashboard',this)"><span class="nav-icon">📊</span>Dashboard</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Betrieb</div>
+    <div class="nav-item" onclick="nav('auftraege',this)"><span class="nav-icon">📋</span>Aufträge</div>
+    <div class="nav-item" onclick="nav('kunden',this)"><span class="nav-icon">👥</span>Kunden</div>
+    <div class="nav-item" onclick="nav('mitarbeiter',this)"><span class="nav-icon">👷</span>Mitarbeiter</div>
+    <div class="nav-item" onclick="nav('kalender',this)"><span class="nav-icon">📅</span>Kalender</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Ressourcen</div>
+    <div class="nav-item" onclick="nav('lager',this)"><span class="nav-icon">🪣</span>Lager</div>
+    <div class="nav-item" onclick="nav('maschinen',this)"><span class="nav-icon">🚜</span>Maschinen</div>
+    <div class="nav-item" onclick="nav('finanzen',this)"><span class="nav-icon">💶</span>Finanzen</div>
+    <div class="nav-item" onclick="nav('rechnungen',this)"><span class="nav-icon">🧾</span>Rechnungen</div>
+    <div class="nav-item" onclick="nav('belege',this)"><span class="nav-icon">📸</span>Belege</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Organisation</div>
+    <div class="nav-item" onclick="nav('zeiterfassung',this)"><span class="nav-icon">⏱</span>Zeiterfassung</div>
+    <div class="nav-item" onclick="nav('aufgaben',this)"><span class="nav-icon">✅</span>Aufgaben</div>
+  </div>
+  <div class="sidebar-footer">
+    v3.0 · Lindau Garten- und Landschaftsbau<br>
+    <button onclick="openM('pw-change-modal')" style="margin-top:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);padding:5px 12px;border-radius:8px;cursor:pointer;font-size:.72rem;font-family:'DM Sans',sans-serif;">🔐 PIN verwalten</button>
+  </div>
+</nav>
+
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" id="hbtn" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+      <div class="topbar-title" id="page-title">Dashboard</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <div class="topbar-date" id="date-el"></div>
+      <button class="btn btn-p btn-sm" onclick="openM('neu-auftrag-modal')">＋ Auftrag</button>
+    </div>
+  </div>
+  <div class="content" id="content"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav">
+  <div class="bn-items">
+    <div class="bn-item active" id="bn-dashboard" onclick="nav('dashboard',null)"><div class="bn-icon">📊</div><div>Start</div></div>
+    <div class="bn-item" id="bn-auftraege" onclick="nav('auftraege',null)"><div class="bn-icon">📋</div><div>Aufträge</div></div>
+    <div class="bn-item" id="bn-kunden" onclick="nav('kunden',null)"><div class="bn-icon">👥</div><div>Kunden</div></div>
+    <div class="bn-item" id="bn-mitarbeiter" onclick="nav('mitarbeiter',null)"><div class="bn-icon">👷</div><div>Team</div></div>
+    <div class="bn-item" id="bn-zeiterfassung" onclick="nav('zeiterfassung',null)"><div class="bn-icon">⏱</div><div>Zeiten</div></div>
+    <div class="bn-item" id="bn-more" onclick="toggleSidebar()"><div class="bn-icon">☰</div><div>Mehr</div></div>
+  </div>
+</nav>
+
+<!-- MODALS -->
+<!-- Neuer Auftrag -->
+<div class="mbg" id="neu-auftrag-modal">
+  <div class="modal"><div class="mhandle"></div><div class="mtitle">🌱 Neuer Auftrag</div>
+    <div class="fg">
+      <div class="fi full"><label>Auftragsbezeichnung</label><input id="a-name" placeholder="z.B. Rasenmähen Müller"></div>
+      <div class="fi"><label>Kunde</label><select id="a-kunde"></select></div>
+      <div class="fi"><label>Datum</label><input type="date" id="a-datum"></div>
+      <div class="fi"><label>Arbeitsbeginn</label><input type="time" id="a-uhrzeit"></div>
+      <div class="fi"><label>Status</label><select id="a-status"><option>Geplant</option><option>Aktiv</option><option>Abgeschlossen</option></select></div>
+      <div class="fi"><label>Preis (€)</label><input type="number" id="a-preis" placeholder="0.00"></div>
+      <div class="fi full"><label>Mitarbeiter (Mehrfachauswahl)</label><div class="ms" id="a-ma-wrap"></div><div class="tags" id="a-ma-tags"></div></div>
+      <div class="fi full"><label>Beschreibung</label><textarea id="a-beschr" placeholder="Details..."></textarea></div>
+    </div>
+    <div class="mfooter"><button class="btn btn-o" onclick="closeM('neu-auftrag-modal')">Abbrechen</button><button class="btn btn-p" onclick="saveAuftrag()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- Neuer Kunde -->
+<div class="mbg" id="neu-kunde-modal">
+  <div class="modal"><div class="mhandle"></div><div class="mtitle">👥 Neuer Kunde</div>
+    <div class="fg">
+      <div class="fi full"><label>Name</label><input id="k-name" placeholder="Vor- und Nachname"></div>
+      <div class="fi full"><label>Adresse</label><input id="k-adresse" placeholder="Straße, PLZ Ort"></div>
+      <div class="fi"><label>Telefon</label><input id="k-tel" placeholder="+49 ..."></div>
+      <div class="fi"><label>E-Mail</label><input id="k-email" placeholder="email@beispiel.de"></div>
+    </div>
+    <div class="mfooter"><button class="btn btn-o" onclick="closeM('neu-kunde-modal')">Abbrechen</button><button class="btn btn-p" onclick="saveKunde()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- Neuer Mitarbeiter -->
+<div class="mbg" id="neu-ma-modal">
+  <div class="modal"><div class="mhandle"></div><div class="mtitle">👷 Neuer Mitarbeiter</div>
+    <div class="fg">
+      <div class="fi"><label>Vorname</label><input id="m-vn" placeholder="Hans"></div>
+      <div class="fi"><label>Nachname</label><input id="m-nn" placeholder="Müller"></div>
+      <div class="fi"><label>Rolle</label><select id="m-rolle"><option>Vorarbeiter</option><option>Gärtner</option><option>Gärtnerin</option><option>Fahrer</option><option>Azubi</option></select></div>
+      <div class="fi"><label>Telefon</label><input id="m-tel" placeholder="+49 ..."></div>
+      <div class="fi"><label>Stundenlohn (€)</label><input type="number" id="m-lohn" placeholder="16.00"></div>
+      <div class="fi"><label>Status</label><select id="m-status"><option>Anwesend</option><option>Abwesend</option><option>Urlaub</option></select></div>
+    </div>
+    <div class="mfooter"><button class="btn btn-o" onclick="closeM('neu-ma-modal')">Abbrechen</button><button class="btn btn-p" onclick="saveMa()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- Material -->
+<div class="mbg" id="neu-material-modal">
+  <div class="modal"><div class="mhandle"></div><div class="mtitle">🪣 Material</div>
+    <div class="fg">
+      <div class="fi"><label>Name</label><input id="mat-name" placeholder="z.B. Rasensamen"></div>
+      <div class="fi"><label>Einheit</label><select id="mat-einheit"><option>kg</option><option>Liter</option><option>Stück</option><option>Säcke</option><option>Rollen</option></select></div>
+      <div class="fi"><label>Bestand</label><input type="number" id="mat-bestand" placeholder="0"></div>
+      <div class="fi"><label>Mindestbestand</label><input type="number" id="mat-min" placeholder="5"></div>
+    </div>
+    <div class="mfooter"><button class="btn btn-o" onclick="closeM('neu-material-modal')">Abbrechen</button><button class="btn btn-p" onclick="saveMaterial()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- Maschine -->
+<div class="mbg" id="neu-maschine-modal">
+  <div class="modal"><div class="mhandle"></div><div class="mtitle">🚜 Gerät</div>
+    <div class="fg">
+      <div class="fi"><label>Bezeichnung</label><input id="mas-name" placeholder="z.B. Husqvarna 450"></div>
+      <div class="fi"><label>Typ</label><select id="mas-typ"><option>Rasenmäher</option><option>Heckenschere</option><option>Laubbläser</option><option>Traktor</option><option>Transporter</option><option>Sonstiges</option></select></div>
+      <div class="fi"><label>Status</label><select id="mas-status"><option>Einsatzbereit</option><option>In Wartung</option><option>Defekt</option></select></div>
+      <div class="fi"><label>Nächste Wartung</label><input type="date" id="mas-wartung"></div>
+      <div class="fi full"><label>Notiz</label><input id="mas-notiz" placeholder="Besonderheiten..."></div>
+    </div>
+    <div class="mfooter"><button class="btn btn-o" onclick="closeM('neu-maschine-modal')">Abbrechen</button><button class="btn btn-p" onclick="saveMaschine()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- Buchung -->
+<div class="mbg" id="neu-buchung-modal">
+  <div class="modal"><div class="mhandle"></div><div class="mtitle">💶 Buchung</div>
+    <div class="fg">
+      <div class="fi full"><label>Beschreibung</label><input id="b-beschr" placeholder="z.B. Rechnung Müller"></div>
+      <div class="fi"><label>Typ</label><select id="b-typ"><option>Einnahme</option><option>Ausgabe</option></select></div>
+      <div class="fi"><label>Betrag (€)</label><input type="number" id="b-betrag" placeholder="0.00"></div>
+      <div class="fi"><label>Datum</label><input type="date" id="b-datum"></div>
+    </div>
+    <div class="mfooter"><button class="btn btn-o" onclick="closeM('neu-buchung-modal')">Abbrechen</button><button class="btn btn-p" onclick="saveBuchung()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- Rechnung -->
+<div class="mbg" id="neu-rechnung-modal">
+  <div class="modal"><div class="mhandle"></div><div class="mtitle">🧾 Rechnung</div>
+    <div class="fg">
+      <div class="fi"><label>Rechnungsnr.</label><input id="r-nr" placeholder="2025-001"></div>
+      <div class="fi"><label>Kunde</label><select id="r-kunde"></select></div>
+      <div class="fi"><label>Datum</label><input type="date" id="r-datum"></div>
+      <div class="fi"><label>Fällig am</label><input type="date" id="r-faellig"></div>
+      <div class="fi full"><label>Leistung</label><textarea id="r-leistung" placeholder="z.B. Rasenpflege April..."></textarea></div>
+      <div class="fi"><label>Netto (€)</label><input type="number" id="r-netto" placeholder="0.00" oninput="calcR()"></div>
+      <div class="fi"><label>MwSt.</label><select id="r-mwst" onchange="calcR()"><option value="19">19%</option><option value="7">7%</option><option value="0">0%</option></select></div>
+      <div class="fi"><label>MwSt. Betrag</label><input id="r-mwst-b" readonly></div>
+      <div class="fi"><label>Brutto (€)</label><input id="r-brutto" readonly style="font-weight:700"></div>
+      <div class="fi"><label>Status</label><select id="r-status"><option>Offen</option><option>Bezahlt</option><option>Überfällig</option><option>Storniert</option></select></div>
+    </div>
+    <div class="mfooter"><button class="btn btn-o" onclick="closeM('neu-rechnung-modal')">Abbrechen</button><button class="btn btn-p" onclick="saveRechnung()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- Beleg -->
+<div class="mbg" id="neu-beleg-modal">
+  <div class="modal"><div class="mhandle"></div><div class="mtitle">📸 Beleg erfassen</div>
+    <div class="drop-zone" id="drop-zone" onclick="document.getElementById('beleg-file').click()">
+      <div id="drop-ph" style="text-align:center;padding:20px;pointer-events:none">
+        <div style="font-size:2.6rem;margin-bottom:8px">📷</div>
+        <div style="font-weight:700;color:var(--gd);font-size:.9rem">Foto aufnehmen / auswählen</div>
+        <div style="font-size:.74rem;color:var(--tm);margin-top:4px">Kamera · Galerie · Datei</div>
+      </div>
+      <img id="drop-img" style="display:none;width:100%;max-height:220px;object-fit:contain" alt="">
+    </div>
+    <input type="file" id="beleg-file" accept="image/*" capture="environment" style="display:none" onchange="previewBeleg(this)">
+    <div class="fg">
+      <div class="fi full"><label>Bezeichnung</label><input id="bel-name" placeholder="z.B. Tankquittung"></div>
+      <div class="fi"><label>Lieferant</label><input id="bel-lief" placeholder="z.B. Aral, OBI"></div>
+      <div class="fi"><label>Kategorie</label><select id="bel-kat"><option>Kraftstoff</option><option>Material</option><option>Werkzeug</option><option>Fahrzeug</option><option>Büro</option><option>Sonstiges</option></select></div>
+      <div class="fi"><label>Betrag (€)</label><input type="number" id="bel-betrag" placeholder="0.00" step="0.01"></div>
+      <div class="fi"><label>MwSt.</label><select id="bel-mwst"><option value="">– unbekannt –</option><option value="19">19%</option><option value="7">7%</option><option value="0">0%</option></select></div>
+      <div class="fi"><label>Datum</label><input type="date" id="bel-datum"></div>
+    </div>
+    <div class="mfooter"><button class="btn btn-o" onclick="closeM('neu-beleg-modal')">Abbrechen</button><button class="btn btn-p" onclick="saveBeleg()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- Zeiterfassung -->
+<div class="mbg" id="neu-zeit-modal">
+  <div class="modal"><div class="mhandle"></div><div class="mtitle">⏱ Zeit erfassen</div>
+    <div class="fg">
+      <div class="fi"><label>Datum</label><input type="date" id="z-datum"></div>
+      <div class="fi"><label>Mitarbeiter</label><select id="z-ma"></select></div>
+      <div class="fi"><label>Von</label><input type="time" id="z-von" oninput="calcZ()"></div>
+      <div class="fi"><label>Bis</label><input type="time" id="z-bis" oninput="calcZ()"></div>
+      <div class="fi"><label>Stunden (manuell)</label><input type="number" id="z-std" step="0.25" placeholder="z.B. 7.5"></div>
+      <div class="fi"><label>Auftrag</label><select id="z-auftrag"></select></div>
+      <div class="fi full"><label>Notiz</label><input id="z-notiz" placeholder="Optional..."></div>
+      <div class="fi full"><div id="z-calc" style="font-size:.78rem;color:var(--tm)"></div></div>
+    </div>
+    <div class="mfooter"><button class="btn btn-o" onclick="closeM('neu-zeit-modal')">Abbrechen</button><button class="btn btn-p" onclick="saveZeit()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- Aufgabe -->
+<div class="mbg" id="neu-aufgabe-modal">
+  <div class="modal"><div class="mhandle"></div><div class="mtitle">✅ Neue Aufgabe</div>
+    <div class="fg">
+      <div class="fi full"><label>Aufgabe</label><input id="auf-titel" placeholder="Was muss erledigt werden?"></div>
+      <div class="fi"><label>Priorität</label><select id="auf-prio"><option value="hoch">🔴 Hoch</option><option value="mittel" selected>🟡 Mittel</option><option value="niedrig">🟢 Niedrig</option></select></div>
+      <div class="fi"><label>Fällig am</label><input type="date" id="auf-faellig"></div>
+      <div class="fi"><label>Zuständig</label><select id="auf-ma"></select></div>
+      <div class="fi full"><label>Notiz</label><input id="auf-notiz" placeholder="Optional..."></div>
+    </div>
+    <div class="mfooter"><button class="btn btn-o" onclick="closeM('neu-aufgabe-modal')">Abbrechen</button><button class="btn btn-p" onclick="saveAufgabe()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- PIN Schutz -->
+<div class="mbg" id="pw-modal" style="z-index:500">
+  <div class="modal" style="text-align:center">
+    <div style="font-size:3rem;margin-bottom:12px">🔐</div>
+    <div class="mtitle" style="text-align:center">Lindau Garten</div>
+    <p style="font-size:.85rem;color:var(--tm);margin-bottom:16px">PIN eingeben</p>
+    <div style="display:flex;justify-content:center;gap:12px;margin-bottom:20px" id="pw-dots">
+      <div class="pw-dot"></div><div class="pw-dot"></div><div class="pw-dot"></div><div class="pw-dot"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:220px;margin:0 auto 16px" id="pw-numpad"></div>
+    <div id="pw-err" style="color:var(--rot);font-size:.82rem;min-height:20px"></div>
+    <div style="margin-top:14px"><button class="btn btn-o btn-sm" onclick="closeM('pw-modal');openM('pw-change-modal')">🔧 PIN ändern</button></div>
+  </div>
+</div>
+
+<!-- PIN Ändern -->
+<div class="mbg" id="pw-change-modal">
+  <div class="modal"><div class="mhandle"></div><div class="mtitle">🔧 PIN verwalten</div>
+    <div class="fg">
+      <div class="fi full"><label>Aktueller PIN (leer lassen beim ersten Mal)</label><input type="password" id="pw-old" placeholder="Aktueller PIN" maxlength="4"></div>
+      <div class="fi"><label>Neuer PIN (4 Ziffern)</label><input type="password" id="pw-new1" placeholder="Neuer PIN" maxlength="4"></div>
+      <div class="fi"><label>PIN wiederholen</label><input type="password" id="pw-new2" placeholder="Wiederholen" maxlength="4"></div>
+    </div>
+    <div class="mfooter"><button class="btn btn-o" onclick="closeM('pw-change-modal')">Abbrechen</button><button class="btn btn-p" onclick="savePIN()">PIN speichern</button></div>
+  </div>
+</div>
+
+<!-- Rechnungs-Email -->
+<div class="mbg" id="email-modal">
+  <div class="modal"><div class="mhandle"></div><div class="mtitle">📧 Rechnung per E-Mail</div>
+    <div class="fg">
+      <div class="fi full"><label>An (E-Mail)</label><input type="email" id="em-to" placeholder="kunde@beispiel.de"></div>
+      <div class="fi full"><label>Betreff</label><input id="em-betreff"></div>
+      <div class="fi full"><label>Nachricht</label><textarea id="em-text" rows="6"></textarea></div>
+    </div>
+    <div style="font-size:.78rem;color:var(--tm);margin-top:8px;padding:10px;background:rgba(74,140,92,.07);border-radius:8px">💡 Öffnet deinen E-Mail-Client. Rechnung als PDF anhängen via Drucken → Als PDF speichern.</div>
+    <div class="mfooter"><button class="btn btn-o" onclick="closeM('email-modal')">Abbrechen</button><button class="btn btn-p" onclick="sendEmail()">📧 E-Mail öffnen</button></div>
+  </div>
+</div>
+
+<!-- Beleg Vollbild -->
+<div class="mbg" id="beleg-viewer" style="background:rgba(0,0,0,.92)">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px;width:100%">
+    <img id="viewer-img" style="max-width:95vw;max-height:80vh;border-radius:12px;object-fit:contain" alt="">
+    <button class="btn btn-o" style="color:#fff;border-color:rgba(255,255,255,.3)" onclick="closeM('beleg-viewer')">✕ Schließen</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- iOS Install Hint -->
+<div class="ios-hint" id="ios-hint">
+  <div style="display:flex;align-items:center;gap:10px">
+    <div style="font-size:1.8rem">🌿</div>
+    <div style="flex:1"><div style="font-weight:700;font-size:.9rem">App installieren</div><div style="font-size:.75rem;opacity:.8;margin-top:2px">Zum Homescreen hinzufügen</div></div>
+    <button onclick="closeIOSHint()" style="background:none;border:none;color:rgba(255,255,255,.6);font-size:1.2rem;cursor:pointer">✕</button>
+  </div>
+  <div style="background:rgba(255,255,255,.1);border-radius:12px;padding:12px;font-size:.82rem;line-height:1.7">
+    <div>1. Tippe unten auf <strong>Teilen ⎙</strong></div>
+    <div>2. Wähle <strong>„Zum Home-Bildschirm"</strong></div>
+    <div>3. Tippe oben rechts auf <strong>„Hinzufügen"</strong></div>
+  </div>
+  <div style="text-align:center;font-size:.7rem;opacity:.5">Nur in Safari · Nicht in Chrome/Firefox</div>
+</div>
+
+<script>
+'use strict';
+
+// ── STORAGE KEY ──
+const SK = 'lindau_v4';
+const PIN_KEY = 'lindau_pin';
+
+// ── AVATAR COLORS ──
+const AVC = ['#4a8c5c','#8b6240','#2980b9','#8e44ad','#c8a84b'];
+
+// ── DEFAULT DATA ──
+const DEFAULTS = {
+  auftraege:[
+    {id:1,name:'Rasenpflege Schmidt',kunde:'Familie Schmidt',datum:'2025-04-28',uhrzeit:'07:30',ma:['Klaus Weber','Anna Fischer'],status:'Aktiv',preis:180,beschr:'Mähen, Kanten, Laubblasen'},
+    {id:2,name:'Heckenschnitt Bauer',kunde:'Peter Bauer',datum:'2025-04-29',uhrzeit:'08:00',ma:['Franz Huber'],status:'Geplant',preis:220,beschr:'Thujahecke, ca. 30m'},
+    {id:3,name:'Bepflanzung Mayer',kunde:'Sabine Mayer',datum:'2025-05-02',uhrzeit:'09:00',ma:['Klaus Weber','Franz Huber'],status:'Geplant',preis:450,beschr:'Frühjahrsblüher'}
+  ],
+  kunden:[
+    {id:1,name:'Familie Schmidt',adresse:'Gartenweg 3, 80331 München',tel:'089 1234567',email:'schmidt@mail.de'},
+    {id:2,name:'Peter Bauer',adresse:'Blumenstr. 12, 80802 München',tel:'089 9876543',email:'pbauer@web.de'},
+    {id:3,name:'Sabine Mayer',adresse:'Rosenallee 5, 81547 München',tel:'0172 3456789',email:'smayer@gmail.com'}
+  ],
+  mitarbeiter:[
+    {id:1,vorname:'Klaus',nachname:'Weber',rolle:'Vorarbeiter',tel:'0171 1234567',lohn:22,status:'Anwesend'},
+    {id:2,vorname:'Franz',nachname:'Huber',rolle:'Gärtner',tel:'0172 2345678',lohn:18,status:'Anwesend'},
+    {id:3,vorname:'Anna',nachname:'Fischer',rolle:'Gärtnerin',tel:'0173 3456789',lohn:17,status:'Anwesend'},
+    {id:4,vorname:'Max',nachname:'Berger',rolle:'Fahrer',tel:'0174 4567890',lohn:16,status:'Urlaub'}
+  ],
+  materialien:[
+    {id:1,name:'Rasensamen Premium',einheit:'kg',bestand:45,min:10,icon:'🌱'},
+    {id:2,name:'Dünger Universal',einheit:'Säcke',bestand:8,min:5,icon:'💊'},
+    {id:3,name:'Pflanzerde',einheit:'Säcke',bestand:3,min:10,icon:'🪣'},
+    {id:4,name:'Mähfaden 3mm',einheit:'Rollen',bestand:2,min:3,icon:'🧵'}
+  ],
+  maschinen:[
+    {id:1,name:'Husqvarna Aufsitzmäher',typ:'Rasenmäher',status:'Einsatzbereit',wartung:'2025-09-01',notiz:'Messer gewechselt'},
+    {id:2,name:'Stihl HS 45',typ:'Heckenschere',status:'Einsatzbereit',wartung:'2025-08-15',notiz:''},
+    {id:3,name:'VW Crafter',typ:'Transporter',status:'Einsatzbereit',wartung:'2025-07-20',notiz:'HU fällig Juli'},
+    {id:4,name:'Honda Rasenmäher',typ:'Rasenmäher',status:'In Wartung',wartung:'2025-10-10',notiz:'Vergaser defekt'}
+  ],
+  buchungen:[
+    {id:1,beschr:'Rechnung Schmidt April',typ:'Einnahme',betrag:540,datum:'2025-04-22'},
+    {id:2,beschr:'Diesel Tankrechnung',typ:'Ausgabe',betrag:180,datum:'2025-04-20'},
+    {id:3,beschr:'Pflanzerde Nachkauf',typ:'Ausgabe',betrag:95,datum:'2025-04-18'}
+  ],
+  rechnungen:[],belege:[],zeiteintraege:[],aufgaben:[],nextId:100
+};
+
+// ── STATE ──
+let S = {};
+
+function loadS() {
+  try {
+    const r = localStorage.getItem(SK);
+    if (r) { S = JSON.parse(r); }
+    else { S = JSON.parse(JSON.stringify(DEFAULTS)); saveS(); }
+  } catch(e) { S = JSON.parse(JSON.stringify(DEFAULTS)); }
+  // Ensure all arrays exist
+  ['auftraege','kunden','mitarbeiter','materialien','maschinen','buchungen','rechnungen','belege','zeiteintraege','aufgaben'].forEach(k=>{ if(!S[k]) S[k]=[]; });
+  if(!S.nextId) S.nextId = 100;
+}
+
+function saveS() {
+  try { localStorage.setItem(SK, JSON.stringify(S)); } catch(e) {}
+}
+
+// ── NAVIGATION ──
+let currentPage = 'dashboard';
+
+function nav(page, el) {
+  currentPage = page;
+  closeSidebar();
+  const titles = {dashboard:'Dashboard',auftraege:'Aufträge',kunden:'Kunden',mitarbeiter:'Mitarbeiter',kalender:'Kalender',lager:'Lager & Material',maschinen:'Maschinen',finanzen:'Finanzen',rechnungen:'Rechnungen',belege:'Belege',zeiterfassung:'Zeiterfassung',aufgaben:'Aufgaben'};
+  document.getElementById('page-title').textContent = titles[page] || page;
+  // Update bottom nav
+  document.querySelectorAll('.bn-item').forEach(b => b.classList.remove('active'));
+  const bn = document.getElementById('bn-'+page);
+  if (bn) bn.classList.add('active');
+  // Update sidebar nav
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (el) { el.classList.add('active'); }
+  else {
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'"+page+"'")) n.classList.add('active');
+    });
+  }
+  renderPage(page);
+}
+
+function renderPage(p) {
+  const c = document.getElementById('content');
+  switch(p) {
+    case 'dashboard': c.innerHTML = renderDashboard(); break;
+    case 'auftraege': c.innerHTML = renderAuftraege(); break;
+    case 'kunden': c.innerHTML = renderKunden(); break;
+    case 'mitarbeiter': c.innerHTML = renderMitarbeiter(); break;
+    case 'kalender': c.innerHTML = renderKalender(); break;
+    case 'lager': c.innerHTML = renderLager(); break;
+    case 'maschinen': c.innerHTML = renderMaschinen(); break;
+    case 'finanzen': c.innerHTML = renderFinanzen(); break;
+    case 'rechnungen': c.innerHTML = renderRechnungen(); break;
+    case 'belege': c.innerHTML = renderBelege(); break;
+    case 'zeiterfassung': c.innerHTML = renderZeiterfassung(); break;
+    case 'aufgaben': c.innerHTML = renderAufgaben(); break;
+  }
+}
+
+// ── MODAL ──
+function openM(id) {
+  // Populate dynamic selects
+  if (id === 'neu-auftrag-modal' || id === 'edit-auftrag-modal') {
+    const ks = document.getElementById('a-kunde');
+    if (ks) { ks.innerHTML = '<option value="">– wählen –</option>' + S.kunden.map(k=>`<option>${k.name}</option>`).join(''); }
+    buildMS('a-ma-wrap', 'a-ma-tags', []);
+    const el = document.getElementById('a-datum');
+    if (el && !el.value) el.value = today();
+  }
+  if (id === 'neu-rechnung-modal') {
+    const ks = document.getElementById('r-kunde');
+    if (ks) { ks.innerHTML = '<option value="">– wählen –</option>' + S.kunden.map(k=>`<option>${k.name}</option>`).join(''); }
+    const el = document.getElementById('r-datum');
+    if (el && !el.value) el.value = today();
+    const nr = document.getElementById('r-nr');
+    if (nr && !nr.value) nr.value = new Date().getFullYear() + '-' + String(S.rechnungen.length+1).padStart(3,'0');
+  }
+  if (id === 'neu-zeit-modal') {
+    const ms = document.getElementById('z-ma');
+    if (ms) { ms.innerHTML = '<option value="">– wählen –</option>' + S.mitarbeiter.map(m=>`<option>${m.vorname} ${m.nachname}</option>`).join(''); }
+    const as = document.getElementById('z-auftrag');
+    if (as) { as.innerHTML = '<option value="">– kein Auftrag –</option>' + S.auftraege.map(a=>`<option>${a.name}</option>`).join(''); }
+    const el = document.getElementById('z-datum');
+    if (el && !el.value) el.value = today();
+  }
+  if (id === 'neu-aufgabe-modal') {
+    const ms = document.getElementById('auf-ma');
+    if (ms) { ms.innerHTML = '<option value="">– alle –</option>' + S.mitarbeiter.map(m=>`<option>${m.vorname} ${m.nachname}</option>`).join(''); }
+  }
+  if (id === 'neu-beleg-modal') {
+    const el = document.getElementById('bel-datum');
+    if (el && !el.value) el.value = today();
+  }
+  if (id === 'pw-modal') buildNumpad();
+  document.getElementById(id).classList.add('open');
+}
+
+function closeM(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// Close modal on background click
+document.querySelectorAll('.mbg').forEach(m => {
+  m.addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+});
+
+// ── MULTI SELECT ──
+function buildMS(wrapId, tagsId, selected) {
+  const wrap = document.getElementById(wrapId);
+  if (!wrap) return;
+  wrap.innerHTML = S.mitarbeiter.map(m => {
+    const n = m.vorname+' '+m.nachname;
+    const chk = selected.includes(n) ? 'checked' : '';
+    return `<label class="ms-opt"><input type="checkbox" value="${n}" ${chk} onchange="updateTags('${wrapId}','${tagsId}')"> ${n} <span style="font-size:.72rem;color:var(--tm);margin-left:4px">(${m.rolle})</span></label>`;
+  }).join('');
+  updateTags(wrapId, tagsId);
+}
+
+function updateTags(wrapId, tagsId) {
+  const wrap = document.getElementById(wrapId);
+  const tags = document.getElementById(tagsId);
+  if (!wrap || !tags) return;
+  const checked = [...wrap.querySelectorAll('input:checked')].map(i=>i.value);
+  tags.innerHTML = checked.length ? checked.map(n=>`<span class="tag">👷 ${n}</span>`).join('') : '';
+}
+
+function getMS(wrapId) {
+  const wrap = document.getElementById(wrapId);
+  if (!wrap) return [];
+  return [...wrap.querySelectorAll('input:checked')].map(i=>i.value);
+}
+
+// ── HELPERS ──
+function today() { return new Date().toISOString().split('T')[0]; }
+function nid() { return S.nextId++; }
+function badge(s) {
+  const m = {Aktiv:'a',Geplant:'g',Abgeschlossen:'e',Offen:'g',Bezahlt:'a',Überfällig:'d',Storniert:'e',Einsatzbereit:'a','In Wartung':'g',Defekt:'d',Anwesend:'a',Urlaub:'g',Abwesend:'d'};
+  return `<span class="badge badge-${m[s]||'e'}">${s}</span>`;
+}
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2600);
+}
+function del(arr, id) {
+  S[arr] = S[arr].filter(x=>x.id!==id);
+  saveS(); toast('🗑 Gelöscht'); renderPage(currentPage);
+}
+
+// ── DASHBOARD ──
+function renderDashboard() {
+  const aktiveA = S.auftraege.filter(a=>a.status!=='Abgeschlossen').length;
+  const anwesend = S.mitarbeiter.filter(m=>m.status==='Anwesend').length;
+  const ein = S.buchungen.filter(b=>b.typ==='Einnahme').reduce((s,b)=>s+b.betrag,0);
+  const nachbestellen = S.materialien.filter(m=>m.bestand<=m.min).length;
+  return `
+  <div class="wetter">
+    <div style="font-size:2rem">⛅</div>
+    <div><div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;line-height:1">17°C</div>
+    <div style="font-size:.76rem;opacity:.8;margin-top:2px">Wechselnd bewölkt · Geeignet für Außenarbeiten</div></div>
+    <div class="w-tags" style="display:flex;gap:6px;margin-left:auto;flex-wrap:wrap">
+      <span style="background:rgba(255,255,255,.12);border-radius:20px;padding:4px 10px;font-size:.7rem">💧 42% Feuchte</span>
+      <span style="background:rgba(255,255,255,.12);border-radius:20px;padding:4px 10px;font-size:.7rem">💨 12 km/h</span>
+    </div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon">📋</div><div class="stat-val">${aktiveA}</div><div class="stat-lbl">Aktive Aufträge</div></div>
+    <div class="stat-card warn"><div class="stat-icon">👷</div><div class="stat-val">${anwesend}</div><div class="stat-lbl">Team heute</div></div>
+    <div class="stat-card info"><div class="stat-icon">💶</div><div class="stat-val">${(ein/1000).toFixed(1)}k</div><div class="stat-lbl">Umsatz (€)</div></div>
+    <div class="stat-card alert"><div class="stat-icon">⚠️</div><div class="stat-val">${nachbestellen}</div><div class="stat-lbl">Nachbestellen</div></div>
+  </div>
+  <div class="dash-grid" style="display:grid;grid-template-columns:1.6fr 1fr;gap:16px">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Aktuelle Aufträge</div><button class="btn btn-o btn-sm" onclick="nav('auftraege',null)">Alle →</button></div>
+      <div class="card-body">${S.auftraege.slice(0,5).map(a=>`
+        <div class="li">
+          <div class="dot" style="background:${a.status==='Aktiv'?'#6bbf7a':a.status==='Geplant'?'#c8a84b':'#b0b8a8'}"></div>
+          <div style="flex:1;min-width:0"><div class="li-name">${a.name}</div><div class="li-detail">${a.kunde} · ${a.datum}${a.uhrzeit?' · 🕐 '+a.uhrzeit:''}</div></div>
+          ${badge(a.status)}
+        </div>`).join('')}</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Team heute</div></div>
+      <div class="card-body">${S.mitarbeiter.map((m,i)=>`
+        <div class="team-item">
+          <div class="avatar" style="background:${AVC[i%5]}">${m.vorname[0]}${m.nachname[0]}</div>
+          <div style="flex:1"><div style="font-weight:600;font-size:.86rem">${m.vorname} ${m.nachname}</div><div style="font-size:.72rem;color:var(--tm)">${m.rolle}</div></div>
+          <span style="font-size:.68rem;padding:2px 7px;border-radius:10px;background:${m.status==='Anwesend'?'rgba(107,191,122,.2)':'rgba(192,57,43,.1)'};color:${m.status==='Anwesend'?'var(--gh)':'var(--rot)'}">${m.status}</span>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── AUFTRAEGE ──
+function renderAuftraege() {
+  return `
+  <div class="sec-hdr"><div class="sec-title">Aufträge</div><button class="btn btn-p" onclick="openM('neu-auftrag-modal')">＋ Neuer Auftrag</button></div>
+  <div class="tbl-wrap desktop-only"><table>
+    <thead><tr><th>Auftrag</th><th>Kunde</th><th>Datum & Zeit</th><th>Mitarbeiter</th><th>Status</th><th>Aktionen</th></tr></thead>
+    <tbody>${S.auftraege.map(a=>{
+      const maL = Array.isArray(a.ma)?a.ma:[a.ma].filter(Boolean);
+      return `<tr>
+        <td><strong>${a.name}</strong>${a.beschr?`<br><small style="color:var(--tm)">${a.beschr}</small>`:''}</td>
+        <td>${a.kunde}</td>
+        <td>${a.datum}${a.uhrzeit?`<br><small>🕐 ${a.uhrzeit}</small>`:''}</td>
+        <td><div style="display:flex;flex-wrap:wrap;gap:3px">${maL.map(n=>`<span class="tag" style="font-size:.7rem">👷 ${n}</span>`).join('')}</div></td>
+        <td>${badge(a.status)}</td>
+        <td><div class="td-act">
+          <button class="btn btn-o btn-sm" onclick="editAuftrag(${a.id})">✏</button>
+          <button class="btn btn-o btn-sm" onclick="nextStatus(${a.id})">⟳</button>
+          <button class="btn btn-d btn-sm" onclick="del('auftraege',${a.id})">✕</button>
+        </div></td>
+      </tr>`;}).join('')}
+    </tbody></table></div>
+  <div class="mobile-only">${S.auftraege.map(a=>{
+    const maL = Array.isArray(a.ma)?a.ma:[a.ma].filter(Boolean);
+    return `<div class="mob-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div class="mob-title">${a.name}</div>${badge(a.status)}
+      </div>
+      <div class="mob-row"><span class="mob-lbl">Kunde</span><span class="mob-val">${a.kunde}</span></div>
+      <div class="mob-row"><span class="mob-lbl">Datum</span><span class="mob-val">${a.datum}${a.uhrzeit?' · 🕐 '+a.uhrzeit:''}</span></div>
+      <div class="mob-row"><span class="mob-lbl">Team</span><span class="mob-val">${maL.join(', ')||'–'}</span></div>
+      <div class="mob-act">
+        <button class="btn btn-o btn-sm" onclick="editAuftrag(${a.id})">✏ Bearbeiten</button>
+        <button class="btn btn-o btn-sm" onclick="nextStatus(${a.id})">⟳ Status</button>
+        <button class="btn btn-d btn-sm" onclick="del('auftraege',${a.id})">✕</button>
+      </div></div>`;}).join('')}</div>`;
+}
+
+function saveAuftrag() {
+  const name = document.getElementById('a-name').value.trim();
+  if (!name) { toast('⚠ Name erforderlich'); return; }
+  const ma = getMS('a-ma-wrap');
+  S.auftraege.push({id:nid(),name,kunde:document.getElementById('a-kunde').value||'',datum:document.getElementById('a-datum').value||today(),uhrzeit:document.getElementById('a-uhrzeit').value||'',status:document.getElementById('a-status').value,preis:parseFloat(document.getElementById('a-preis').value)||0,ma:ma.length?ma:['–'],beschr:document.getElementById('a-beschr').value});
+  closeM('neu-auftrag-modal');
+  document.getElementById('a-name').value=''; document.getElementById('a-beschr').value=''; document.getElementById('a-preis').value=''; document.getElementById('a-uhrzeit').value='';
+  saveS(); toast('✅ Auftrag gespeichert'); renderPage('auftraege');
+}
+
+function nextStatus(id) {
+  const a = S.auftraege.find(x=>x.id===id); if(!a) return;
+  const c = ['Geplant','Aktiv','Abgeschlossen'];
+  a.status = c[(c.indexOf(a.status)+1)%3];
+  saveS(); toast('Status: '+a.status); renderPage('auftraege');
+}
+
+function editAuftrag(id) {
+  const a = S.auftraege.find(x=>x.id===id); if(!a) return;
+  openM('neu-auftrag-modal');
+  document.getElementById('a-name').value=a.name;
+  const ks=document.getElementById('a-kunde'); if(ks) ks.value=a.kunde;
+  document.getElementById('a-datum').value=a.datum;
+  document.getElementById('a-uhrzeit').value=a.uhrzeit||'';
+  document.getElementById('a-status').value=a.status;
+  document.getElementById('a-preis').value=a.preis||'';
+  document.getElementById('a-beschr').value=a.beschr||'';
+  const maL=Array.isArray(a.ma)?a.ma:[a.ma].filter(Boolean);
+  buildMS('a-ma-wrap','a-ma-tags',maL);
+  // Change save button to update
+  const btn=document.querySelector('#neu-auftrag-modal .btn-p');
+  if(btn){btn.textContent='Aktualisieren';btn.onclick=function(){updateAuftrag(id);};}
+}
+
+function updateAuftrag(id) {
+  const a = S.auftraege.find(x=>x.id===id); if(!a) return;
+  a.name=document.getElementById('a-name').value.trim();
+  a.kunde=document.getElementById('a-kunde').value;
+  a.datum=document.getElementById('a-datum').value;
+  a.uhrzeit=document.getElementById('a-uhrzeit').value;
+  a.status=document.getElementById('a-status').value;
+  a.preis=parseFloat(document.getElementById('a-preis').value)||0;
+  a.beschr=document.getElementById('a-beschr').value;
+  const ma=getMS('a-ma-wrap');
+  a.ma=ma.length?ma:['–'];
+  closeM('neu-auftrag-modal');
+  saveS(); toast('✅ Auftrag aktualisiert'); renderPage('auftraege');
+  // Reset button
+  setTimeout(()=>{const btn=document.querySelector('#neu-auftrag-modal .btn-p');if(btn){btn.textContent='Speichern';btn.onclick=saveAuftrag;}},100);
+}
+
+// ── KUNDEN ──
+function renderKunden() {
+  return `
+  <div class="sec-hdr"><div class="sec-title">Kunden</div><button class="btn btn-p" onclick="openM('neu-kunde-modal')">＋ Neuer Kunde</button></div>
+  <div class="tbl-wrap desktop-only"><table>
+    <thead><tr><th>Name</th><th>Adresse</th><th>Telefon</th><th>E-Mail</th><th>Aktionen</th></tr></thead>
+    <tbody>${S.kunden.map(k=>`<tr>
+      <td><strong>${k.name}</strong></td><td>${k.adresse}</td>
+      <td><a href="tel:${k.tel}" style="color:var(--gh)">${k.tel}</a></td>
+      <td><a href="mailto:${k.email}" style="color:var(--gh)">${k.email}</a></td>
+      <td><div class="td-act">
+        <button class="btn btn-o btn-sm" onclick="editKunde(${k.id})">✏</button>
+        <button class="btn btn-d btn-sm" onclick="del('kunden',${k.id})">✕</button>
+      </div></td>
+    </tr>`).join('')}</tbody></table></div>
+  <div class="mobile-only">${S.kunden.map(k=>`<div class="mob-card">
+    <div class="mob-title">👥 ${k.name}</div>
+    <div class="mob-row"><span class="mob-lbl">Adresse</span><span class="mob-val">${k.adresse}</span></div>
+    <div class="mob-row"><span class="mob-lbl">Tel.</span><span class="mob-val"><a href="tel:${k.tel}" style="color:var(--gh)">${k.tel}</a></span></div>
+    <div class="mob-row"><span class="mob-lbl">E-Mail</span><span class="mob-val"><a href="mailto:${k.email}" style="color:var(--gh)">${k.email}</a></span></div>
+    <div class="mob-act">
+      <button class="btn btn-o btn-sm" onclick="editKunde(${k.id})">✏ Bearbeiten</button>
+      <button class="btn btn-d btn-sm" onclick="del('kunden',${k.id})">✕</button>
+    </div></div>`).join('')}</div>`;
+}
+
+function saveKunde() {
+  const name=document.getElementById('k-name').value.trim();
+  if(!name){toast('⚠ Name erforderlich');return;}
+  S.kunden.push({id:nid(),name,adresse:document.getElementById('k-adresse').value,tel:document.getElementById('k-tel').value,email:document.getElementById('k-email').value});
+  closeM('neu-kunde-modal');
+  ['k-name','k-adresse','k-tel','k-email'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  saveS();toast('✅ Kunde gespeichert');renderPage('kunden');
+}
+
+function editKunde(id) {
+  const k=S.kunden.find(x=>x.id===id);if(!k)return;
+  openM('neu-kunde-modal');
+  document.getElementById('k-name').value=k.name;
+  document.getElementById('k-adresse').value=k.adresse;
+  document.getElementById('k-tel').value=k.tel;
+  document.getElementById('k-email').value=k.email;
+  const btn=document.querySelector('#neu-kunde-modal .btn-p');
+  if(btn){btn.textContent='Aktualisieren';btn.onclick=function(){
+    k.name=document.getElementById('k-name').value.trim();
+    k.adresse=document.getElementById('k-adresse').value;
+    k.tel=document.getElementById('k-tel').value;
+    k.email=document.getElementById('k-email').value;
+    closeM('neu-kunde-modal');saveS();toast('✅ Aktualisiert');renderPage('kunden');
+    setTimeout(()=>{const b=document.querySelector('#neu-kunde-modal .btn-p');if(b){b.textContent='Speichern';b.onclick=saveKunde;}},100);
+  };}
+}
+
+// ── MITARBEITER ──
+function renderMitarbeiter() {
+  return `
+  <div class="sec-hdr"><div class="sec-title">Mitarbeiter</div><button class="btn btn-p" onclick="openM('neu-ma-modal')">＋ Hinzufügen</button></div>
+  <div class="tbl-wrap desktop-only"><table>
+    <thead><tr><th>Name</th><th>Rolle</th><th>Telefon</th><th>Lohn</th><th>Status</th><th>Aktionen</th></tr></thead>
+    <tbody>${S.mitarbeiter.map((m,i)=>`<tr>
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <div class="avatar" style="width:30px;height:30px;font-size:.72rem;background:${AVC[i%5]}">${m.vorname[0]}${m.nachname[0]}</div>
+        <strong>${m.vorname} ${m.nachname}</strong></div></td>
+      <td>${m.rolle}</td>
+      <td><a href="tel:${m.tel}" style="color:var(--gh)">${m.tel}</a></td>
+      <td>${m.lohn} €/h</td>
+      <td>${badge(m.status)}</td>
+      <td><div class="td-act">
+        <button class="btn btn-o btn-sm" onclick="editMa(${m.id})">✏</button>
+        <button class="btn btn-d btn-sm" onclick="del('mitarbeiter',${m.id})">✕</button>
+      </div></td>
+    </tr>`).join('')}</tbody></table></div>
+  <div class="mobile-only">${S.mitarbeiter.map((m,i)=>`<div class="mob-card">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+      <div class="avatar" style="background:${AVC[i%5]}">${m.vorname[0]}${m.nachname[0]}</div>
+      <div><div class="mob-title" style="margin-bottom:2px">👷 ${m.vorname} ${m.nachname}</div>${badge(m.status)}</div>
+    </div>
+    <div class="mob-row"><span class="mob-lbl">Rolle</span><span class="mob-val">${m.rolle}</span></div>
+    <div class="mob-row"><span class="mob-lbl">Tel.</span><span class="mob-val"><a href="tel:${m.tel}" style="color:var(--gh)">${m.tel}</a></span></div>
+    <div class="mob-row"><span class="mob-lbl">Lohn</span><span class="mob-val">${m.lohn} €/h</span></div>
+    <div class="mob-act">
+      <button class="btn btn-o btn-sm" onclick="editMa(${m.id})">✏ Bearbeiten</button>
+      <button class="btn btn-d btn-sm" onclick="del('mitarbeiter',${m.id})">✕</button>
+    </div></div>`).join('')}</div>`;
+}
+
+function saveMa() {
+  const vn=document.getElementById('m-vn').value.trim(),nn=document.getElementById('m-nn').value.trim();
+  if(!vn||!nn){toast('⚠ Name erforderlich');return;}
+  S.mitarbeiter.push({id:nid(),vorname:vn,nachname:nn,rolle:document.getElementById('m-rolle').value,tel:document.getElementById('m-tel').value,lohn:parseFloat(document.getElementById('m-lohn').value)||0,status:document.getElementById('m-status').value});
+  closeM('neu-ma-modal');
+  ['m-vn','m-nn','m-tel','m-lohn'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  saveS();toast('✅ Mitarbeiter gespeichert');renderPage('mitarbeiter');
+}
+
+function editMa(id) {
+  const m=S.mitarbeiter.find(x=>x.id===id);if(!m)return;
+  openM('neu-ma-modal');
+  document.getElementById('m-vn').value=m.vorname;
+  document.getElementById('m-nn').value=m.nachname;
+  document.getElementById('m-rolle').value=m.rolle;
+  document.getElementById('m-tel').value=m.tel;
+  document.getElementById('m-lohn').value=m.lohn;
+  document.getElementById('m-status').value=m.status;
+  const btn=document.querySelector('#neu-ma-modal .btn-p');
+  if(btn){btn.textContent='Aktualisieren';btn.onclick=function(){
+    m.vorname=document.getElementById('m-vn').value.trim();
+    m.nachname=document.getElementById('m-nn').value.trim();
+    m.rolle=document.getElementById('m-rolle').value;
+    m.tel=document.getElementById('m-tel').value;
+    m.lohn=parseFloat(document.getElementById('m-lohn').value)||0;
+    m.status=document.getElementById('m-status').value;
+    closeM('neu-ma-modal');saveS();toast('✅ Aktualisiert');renderPage('mitarbeiter');
+    setTimeout(()=>{const b=document.querySelector('#neu-ma-modal .btn-p');if(b){b.textContent='Speichern';b.onclick=saveMa;}},100);
+  };}
+}
+
+// ── KALENDER ──
+let kalMon=new Date().getMonth(), kalYear=new Date().getFullYear();
+
+function renderKalender() {
+  const monate=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  const erster=new Date(kalYear,kalMon,1), letzter=new Date(kalYear,kalMon+1,0);
+  const startWt=(erster.getDay()+6)%7;
+  const now=new Date();
+  const termine=S.auftraege.filter(a=>{const d=new Date(a.datum);return d.getMonth()===kalMon&&d.getFullYear()===kalYear;});
+  const termineTage=termine.map(a=>new Date(a.datum).getDate());
+  let days='';
+  for(let i=0;i<startWt;i++) days+=`<div class="kal-day grau"></div>`;
+  for(let d=1;d<=letzter.getDate();d++){
+    const isT=d===now.getDate()&&kalMon===now.getMonth()&&kalYear===now.getFullYear();
+    const hasE=termineTage.includes(d);
+    days+=`<div class="kal-day${isT?' today':''}${hasE?' has-ev':''}">${d}</div>`;
+  }
+  return `
+  <div class="sec-hdr">
+    <div class="sec-title">Kalender</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn btn-o btn-sm" onclick="kalNav(-1)">‹</button>
+      <span style="font-weight:700;color:var(--gd)">${monate[kalMon]} ${kalYear}</span>
+      <button class="btn btn-o btn-sm" onclick="kalNav(1)">›</button>
+    </div>
+  </div>
+  <div class="kal-cols" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="card"><div class="card-body">
+      <div class="kal-grid">
+        ${['Mo','Di','Mi','Do','Fr','Sa','So'].map(d=>`<div class="kal-h">${d}</div>`).join('')}
+        ${days}
+      </div>
+    </div></div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Termine</div></div>
+      <div class="card-body">${termine.length?termine.sort((a,b)=>a.datum.localeCompare(b.datum)).map(a=>`
+        <div class="li">
+          <div class="dot" style="background:${a.status==='Aktiv'?'#6bbf7a':a.status==='Geplant'?'#c8a84b':'#b0b8a8'}"></div>
+          <div style="flex:1;min-width:0"><div class="li-name">${a.name}</div><div class="li-detail">${a.datum}${a.uhrzeit?' · 🕐 '+a.uhrzeit:''}</div></div>
+          ${badge(a.status)}
+        </div>`).join(''):'<p style="color:var(--tm);font-size:.84rem">Keine Termine.</p>'}</div>
+    </div>
+  </div>`;
+}
+
+function kalNav(d) {
+  kalMon+=d;
+  if(kalMon>11){kalMon=0;kalYear++;}
+  if(kalMon<0){kalMon=11;kalYear--;}
+  renderPage('kalender');
+}
+
+// ── LAGER ──
+function renderLager() {
+  const krit=S.materialien.filter(m=>m.bestand<=m.min);
+  return `
+  <div class="sec-hdr"><div class="sec-title">Lager & Material</div><button class="btn btn-p" onclick="openM('neu-material-modal')">＋ Hinzufügen</button></div>
+  <div class="lager-cols" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="card"><div class="card-header"><div class="card-title">Bestand</div></div>
+    <div class="card-body">${S.materialien.map(m=>{
+      const pct=Math.min(100,(m.bestand/Math.max(m.bestand,m.min*2))*100);
+      const cls=m.bestand<=m.min?'bar-crit':m.bestand<=m.min*1.5?'bar-warn':'bar-ok';
+      return `<div class="lager-item">
+        <span style="font-size:1.3rem">${m.icon||'📦'}</span>
+        <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:.86rem">${m.name}</div>
+        <div style="font-size:.73rem;color:var(--tm)">${m.bestand} ${m.einheit} · Min: ${m.min}</div></div>
+        <div class="bar-bg"><div class="bar ${cls}" style="width:${pct}%"></div></div>
+        <div style="display:flex;gap:5px">
+          <button class="btn btn-o btn-sm" onclick="editMaterial(${m.id})">✏</button>
+          <button class="btn btn-d btn-sm" onclick="del('materialien',${m.id})">✕</button>
+        </div></div>`;}).join('')}</div></div>
+    <div class="card"><div class="card-header"><div class="card-title">⚠ Nachbestellen</div></div>
+    <div class="card-body">${krit.length?krit.map(m=>`
+      <div class="li">
+        <div class="dot" style="background:var(--rot)"></div>
+        <div style="flex:1"><div class="li-name">${m.name}</div><div class="li-detail">${m.bestand} ${m.einheit} (Min: ${m.min})</div></div>
+        <span class="badge badge-d">Nachbestellen</span>
+      </div>`).join(''):'<p style="color:var(--gh);font-weight:600">✅ Alle ausreichend</p>'}</div>
+    </div>
+  </div>`;
+}
+
+function saveMaterial() {
+  const name=document.getElementById('mat-name').value.trim();
+  if(!name){toast('⚠ Name erforderlich');return;}
+  S.materialien.push({id:nid(),name,einheit:document.getElementById('mat-einheit').value,bestand:parseInt(document.getElementById('mat-bestand').value)||0,min:parseInt(document.getElementById('mat-min').value)||5,icon:'📦'});
+  closeM('neu-material-modal');
+  ['mat-name','mat-bestand','mat-min'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  saveS();toast('✅ Material gespeichert');renderPage('lager');
+}
+
+function editMaterial(id) {
+  const m=S.materialien.find(x=>x.id===id);if(!m)return;
+  openM('neu-material-modal');
+  document.getElementById('mat-name').value=m.name;
+  document.getElementById('mat-einheit').value=m.einheit;
+  document.getElementById('mat-bestand').value=m.bestand;
+  document.getElementById('mat-min').value=m.min;
+  const btn=document.querySelector('#neu-material-modal .btn-p');
+  if(btn){btn.textContent='Aktualisieren';btn.onclick=function(){
+    m.name=document.getElementById('mat-name').value.trim();
+    m.einheit=document.getElementById('mat-einheit').value;
+    m.bestand=parseInt(document.getElementById('mat-bestand').value)||0;
+    m.min=parseInt(document.getElementById('mat-min').value)||5;
+    closeM('neu-material-modal');saveS();toast('✅ Aktualisiert');renderPage('lager');
+    setTimeout(()=>{const b=document.querySelector('#neu-material-modal .btn-p');if(b){b.textContent='Speichern';b.onclick=saveMaterial;}},100);
+  };}
+}
+
+// ── MASCHINEN ──
+function renderMaschinen() {
+  return `
+  <div class="sec-hdr"><div class="sec-title">Maschinen & Fahrzeuge</div><button class="btn btn-p" onclick="openM('neu-maschine-modal')">＋ Hinzufügen</button></div>
+  <div class="tbl-wrap desktop-only"><table>
+    <thead><tr><th>Gerät</th><th>Typ</th><th>Status</th><th>Nächste Wartung</th><th>Notiz</th><th>Aktionen</th></tr></thead>
+    <tbody>${S.maschinen.map(m=>`<tr>
+      <td><strong>${m.name}</strong></td><td>${m.typ}</td><td>${badge(m.status)}</td>
+      <td>${m.wartung||'–'}</td><td style="font-size:.78rem;color:var(--tm)">${m.notiz||'–'}</td>
+      <td><div class="td-act">
+        <button class="btn btn-o btn-sm" onclick="editMaschine(${m.id})">✏</button>
+        <button class="btn btn-d btn-sm" onclick="del('maschinen',${m.id})">✕</button>
+      </div></td>
+    </tr>`).join('')}</tbody></table></div>
+  <div class="mobile-only">${S.maschinen.map(m=>`<div class="mob-card ${m.status==='Defekt'?'danger':m.status==='In Wartung'?'warn':''}">
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+      <div class="mob-title">🚜 ${m.name}</div>${badge(m.status)}
+    </div>
+    <div class="mob-row"><span class="mob-lbl">Typ</span><span class="mob-val">${m.typ}</span></div>
+    <div class="mob-row"><span class="mob-lbl">Wartung</span><span class="mob-val">${m.wartung||'–'}</span></div>
+    ${m.notiz?`<div class="mob-row"><span class="mob-lbl">Notiz</span><span class="mob-val" style="font-weight:400">${m.notiz}</span></div>`:''}
+    <div class="mob-act">
+      <button class="btn btn-o btn-sm" onclick="editMaschine(${m.id})">✏ Bearbeiten</button>
+      <button class="btn btn-d btn-sm" onclick="del('maschinen',${m.id})">✕</button>
+    </div></div>`).join('')}</div>`;
+}
+
+function saveMaschine() {
+  const name=document.getElementById('mas-name').value.trim();
+  if(!name){toast('⚠ Name erforderlich');return;}
+  S.maschinen.push({id:nid(),name,typ:document.getElementById('mas-typ').value,status:document.getElementById('mas-status').value,wartung:document.getElementById('mas-wartung').value,notiz:document.getElementById('mas-notiz').value});
+  closeM('neu-maschine-modal');
+  ['mas-name','mas-notiz'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  saveS();toast('✅ Gerät gespeichert');renderPage('maschinen');
+}
+
+function editMaschine(id) {
+  const m=S.maschinen.find(x=>x.id===id);if(!m)return;
+  openM('neu-maschine-modal');
+  document.getElementById('mas-name').value=m.name;
+  document.getElementById('mas-typ').value=m.typ;
+  document.getElementById('mas-status').value=m.status;
+  document.getElementById('mas-wartung').value=m.wartung||'';
+  document.getElementById('mas-notiz').value=m.notiz||'';
+  const btn=document.querySelector('#neu-maschine-modal .btn-p');
+  if(btn){btn.textContent='Aktualisieren';btn.onclick=function(){
+    m.name=document.getElementById('mas-name').value.trim();
+    m.typ=document.getElementById('mas-typ').value;
+    m.status=document.getElementById('mas-status').value;
+    m.wartung=document.getElementById('mas-wartung').value;
+    m.notiz=document.getElementById('mas-notiz').value;
+    closeM('neu-maschine-modal');saveS();toast('✅ Aktualisiert');renderPage('maschinen');
+    setTimeout(()=>{const b=document.querySelector('#neu-maschine-modal .btn-p');if(b){b.textContent='Speichern';b.onclick=saveMaschine;}},100);
+  };}
+}
+
+// ── FINANZEN ──
+function renderFinanzen() {
+  const ein=S.buchungen.filter(b=>b.typ==='Einnahme').reduce((s,b)=>s+b.betrag,0);
+  const aus=S.buchungen.filter(b=>b.typ==='Ausgabe').reduce((s,b)=>s+b.betrag,0);
+  return `
+  <div class="sec-hdr"><div class="sec-title">Finanzen</div><button class="btn btn-p" onclick="openM('neu-buchung-modal')">＋ Buchung</button></div>
+  <div class="fin-grid">
+    <div class="fin-card"><div class="fin-val" style="color:var(--gh)">${ein.toLocaleString('de-DE')} €</div><div style="font-size:.7rem;color:var(--tm);margin-top:3px">Einnahmen</div></div>
+    <div class="fin-card"><div class="fin-val" style="color:var(--rot)">${aus.toLocaleString('de-DE')} €</div><div style="font-size:.7rem;color:var(--tm);margin-top:3px">Ausgaben</div></div>
+    <div class="fin-card"><div class="fin-val" style="color:${ein-aus>=0?'var(--gd)':'var(--rot)'}">${(ein-aus).toLocaleString('de-DE')} €</div><div style="font-size:.7rem;color:var(--tm);margin-top:3px">Gewinn</div></div>
+  </div>
+  <div class="tbl-wrap desktop-only"><table>
+    <thead><tr><th>Datum</th><th>Beschreibung</th><th>Typ</th><th>Betrag</th><th>Aktionen</th></tr></thead>
+    <tbody>${[...S.buchungen].reverse().map(b=>`<tr>
+      <td>${b.datum}</td><td>${b.beschr}</td>
+      <td><span class="badge ${b.typ==='Einnahme'?'badge-a':'badge-d'}">${b.typ}</span></td>
+      <td><strong style="color:${b.typ==='Einnahme'?'var(--gh)':'var(--rot)'}">${b.typ==='Einnahme'?'+':'–'}${b.betrag.toLocaleString('de-DE')} €</strong></td>
+      <td><button class="btn btn-d btn-sm" onclick="del('buchungen',${b.id})">✕</button></td>
+    </tr>`).join('')}</tbody></table></div>
+  <div class="mobile-only">${[...S.buchungen].reverse().map(b=>`<div class="mob-card ${b.typ==='Ausgabe'?'danger':''}">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div class="mob-title">${b.beschr}</div>
+      <strong style="color:${b.typ==='Einnahme'?'var(--gh)':'var(--rot)'};font-size:1rem">${b.typ==='Einnahme'?'+':'–'}${b.betrag.toLocaleString('de-DE')} €</strong>
+    </div>
+    <div class="mob-row"><span class="mob-lbl">Datum</span><span class="mob-val">${b.datum}</span></div>
+    <div class="mob-act"><button class="btn btn-d btn-sm" onclick="del('buchungen',${b.id})">✕ Löschen</button></div>
+  </div>`).join('')}</div>`;
+}
+
+function saveBuchung() {
+  const beschr=document.getElementById('b-beschr').value.trim();
+  const betrag=parseFloat(document.getElementById('b-betrag').value)||0;
+  if(!beschr||!betrag){toast('⚠ Beschreibung und Betrag erforderlich');return;}
+  S.buchungen.push({id:nid(),beschr,typ:document.getElementById('b-typ').value,betrag,datum:document.getElementById('b-datum').value||today()});
+  closeM('neu-buchung-modal');
+  ['b-beschr','b-betrag'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  saveS();toast('✅ Buchung gespeichert');renderPage('finanzen');
+}
+
+// ── RECHNUNGEN ──
+function calcR() {
+  const n=parseFloat(document.getElementById('r-netto').value)||0;
+  const m=parseFloat(document.getElementById('r-mwst').value)||0;
+  const mb=n*m/100;
+  const br=n+mb;
+  const mEl=document.getElementById('r-mwst-b');
+  const bEl=document.getElementById('r-brutto');
+  if(mEl)mEl.value=mb.toFixed(2)+' €';
+  if(bEl)bEl.value=br.toFixed(2)+' €';
+}
+
+function renderRechnungen() {
+  const sc={Offen:'badge-g',Bezahlt:'badge-a',Überfällig:'badge-d',Storniert:'badge-e'};
+  return `
+  <div class="sec-hdr"><div class="sec-title">Rechnungen</div><button class="btn btn-p" onclick="openM('neu-rechnung-modal')">＋ Neue Rechnung</button></div>
+  ${S.rechnungen.length===0?`<div class="card"><div class="card-body" style="text-align:center;padding:32px;color:var(--tm)"><div style="font-size:2.5rem;margin-bottom:10px">🧾</div><div style="font-weight:700">Noch keine Rechnungen.</div></div></div>`:''}
+  <div class="tbl-wrap desktop-only" ${S.rechnungen.length===0?'style="display:none"':''}><table>
+    <thead><tr><th>Nr.</th><th>Kunde</th><th>Datum</th><th>Betrag</th><th>Status</th><th>Aktionen</th></tr></thead>
+    <tbody>${[...S.rechnungen].reverse().map(r=>`<tr>
+      <td><strong>${r.nr}</strong></td><td>${r.kunde}</td><td>${r.datum}</td>
+      <td><strong>${parseFloat(r.brutto||0).toFixed(2)} €</strong><br><small style="color:var(--tm)">Netto: ${parseFloat(r.netto||0).toFixed(2)} € + ${r.mwst}%</small></td>
+      <td><span class="badge ${sc[r.status]||'badge-g'}">${r.status}</span></td>
+      <td><div class="td-act">
+        <button class="btn btn-o btn-sm" onclick="druckR(${r.id})">🖨</button>
+        <button class="btn btn-o btn-sm" onclick="emailR(${r.id})">📧</button>
+        <button class="btn btn-d btn-sm" onclick="del('rechnungen',${r.id})">✕</button>
+      </div></td>
+    </tr>`).join('')}</tbody></table></div>
+  <div class="mobile-only">${[...S.rechnungen].reverse().map(r=>`<div class="mob-card ${r.status==='Überfällig'?'danger':r.status==='Offen'?'warn':''}">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+      <div><div class="mob-title">🧾 ${r.nr}</div><div style="font-size:.76rem;color:var(--tm)">${r.kunde}</div></div>
+      <div style="text-align:right"><div style="font-weight:800;font-size:1.05rem">${parseFloat(r.brutto||0).toFixed(2)} €</div><span class="badge ${sc[r.status]||'badge-g'}">${r.status}</span></div>
+    </div>
+    <div class="mob-row"><span class="mob-lbl">Datum</span><span class="mob-val">${r.datum}</span></div>
+    <div class="mob-act">
+      <button class="btn btn-o btn-sm" onclick="druckR(${r.id})">🖨 Drucken</button>
+      <button class="btn btn-o btn-sm" onclick="emailR(${r.id})">📧 E-Mail</button>
+      <button class="btn btn-d btn-sm" onclick="del('rechnungen',${r.id})">✕</button>
+    </div></div>`).join('')}</div>`;
+}
+
+function saveRechnung() {
+  const nr=document.getElementById('r-nr').value.trim();
+  const kunde=document.getElementById('r-kunde').value;
+  if(!nr||!kunde){toast('⚠ Nr. und Kunde erforderlich');return;}
+  const n=parseFloat(document.getElementById('r-netto').value)||0;
+  const m=parseFloat(document.getElementById('r-mwst').value)||0;
+  S.rechnungen.push({id:nid(),nr,kunde,datum:document.getElementById('r-datum').value||today(),faellig:document.getElementById('r-faellig').value||'',leistung:document.getElementById('r-leistung').value,netto:n,mwst:m,brutto:n+n*m/100,status:document.getElementById('r-status').value});
+  closeM('neu-rechnung-modal');
+  ['r-nr','r-leistung','r-netto','r-mwst-b','r-brutto'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  saveS();toast('✅ Rechnung gespeichert');renderPage('rechnungen');
+}
+
+function druckR(id) {
+  const r=S.rechnungen.find(x=>x.id===id);if(!r)return;
+  const k=S.kunden.find(x=>x.name===r.kunde)||{};
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Rechnung ${r.nr}</title>
+  <style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;padding:20px}
+  .hdr{display:flex;justify-content:space-between;margin-bottom:40px}
+  h2{color:#1a3a2a;border-bottom:2px solid #4a8c5c;padding-bottom:6px;margin:20px 0 10px}
+  table{width:100%;border-collapse:collapse;margin-top:14px}
+  th{background:#1a3a2a;color:#fff;padding:9px;text-align:left}
+  td{padding:9px;border-bottom:1px solid #e0e0e0}
+  .total td{font-weight:700;background:#f5ede0}
+  .brutto td{font-size:1.1rem;font-weight:900;background:#d4edda}
+  @media print{.noprint{display:none}}</style></head><body>
+  <div class="hdr">
+    <div><strong style="font-size:1.4rem;color:#1a3a2a">Lindau Garten</strong><br><small>Garten- und Landschaftsbau</small></div>
+    <div style="text-align:right"><div style="font-size:1.3rem;font-weight:700">RECHNUNG</div><div style="color:#666">Nr. ${r.nr}</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+    <div><h2>Empfänger</h2><strong>${r.kunde}</strong><br>${k.adresse||''}<br>${k.tel||''}</div>
+    <div><h2>Details</h2>Datum: <strong>${r.datum}</strong>${r.faellig?'<br>Fällig: <strong>'+r.faellig+'</strong>':''}</div>
+  </div>
+  <h2>Leistungen</h2>
+  <table><thead><tr><th>Beschreibung</th><th>Netto</th><th>MwSt.</th><th>Brutto</th></tr></thead>
+  <tbody>
+    <tr><td>${r.leistung||'Garten- und Landschaftsbauarbeiten'}</td><td>${parseFloat(r.netto).toFixed(2)} €</td><td>${r.mwst}% (${(r.netto*r.mwst/100).toFixed(2)} €)</td><td>${parseFloat(r.brutto).toFixed(2)} €</td></tr>
+    <tr class="total"><td colspan="3">Nettobetrag</td><td>${parseFloat(r.netto).toFixed(2)} €</td></tr>
+    <tr class="total"><td colspan="3">MwSt. ${r.mwst}%</td><td>${(r.netto*r.mwst/100).toFixed(2)} €</td></tr>
+    <tr class="brutto"><td colspan="3"><strong>GESAMT</strong></td><td><strong>${parseFloat(r.brutto).toFixed(2)} €</strong></td></tr>
+  </tbody></table>
+  <div style="margin-top:36px;font-size:.75rem;color:#999;border-top:1px solid #e0e0e0;padding-top:10px">Lindau Garten- und Landschaftsbau · Zahlbar innerhalb von 14 Tagen.</div>
+  <div class="noprint" style="margin-top:20px;text-align:center">
+    <button onclick="window.print()" style="padding:10px 24px;background:#4a8c5c;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:1rem">🖨 Drucken / PDF</button>
+  </div>
+<div id="iosBanner" style="display:none;position:fixed;bottom:76px;left:12px;right:12px;
+  background:#1a3a2a;color:#fff;border-radius:16px;padding:14px 16px;z-index:500;
+  flex-direction:column;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.3);">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span style="font-size:1.8rem;">🌿</span>
+    <div style="flex:1"><b style="font-size:.9rem;">App installieren</b><br>
+      <small style="opacity:.75;font-size:.72rem;">Tippe Teilen ⎙ → „Zum Home-Bildschirm"</small></div>
+    <button onclick="document.getElementById('iosBanner').style.display='none';localStorage.setItem('ib','1')"
+      style="background:none;border:none;color:rgba(255,255,255,.6);font-size:1.4rem;cursor:pointer;padding:4px 8px;">✕</button>
+  </div>
+</div>
+</body></html>`);
+  w.document.close();
+}
+
+function emailR(id) {
+  const r=S.rechnungen.find(x=>x.id===id);if(!r)return;
+  const k=S.kunden.find(x=>x.name===r.kunde)||{};
+  openM('email-modal');
+  document.getElementById('em-to').value=k.email||'';
+  document.getElementById('em-betreff').value=`Rechnung Nr. ${r.nr} – Lindau Garten- und Landschaftsbau`;
+  document.getElementById('em-text').value=`Sehr geehrte Damen und Herren,\n\nanbei erhalten Sie Rechnung Nr. ${r.nr} vom ${r.datum} über ${parseFloat(r.brutto).toFixed(2)} €.\n${r.leistung?'\nLeistung: '+r.leistung+'\n':''}\nBitte überweisen Sie den Betrag${r.faellig?' bis zum '+r.faellig:' innerhalb von 14 Tagen'}.\n\nMit freundlichen Grüßen\nLindau Garten- und Landschaftsbau`;
+}
+
+function sendEmail() {
+  const to=document.getElementById('em-to').value.trim();
+  if(!to){toast('⚠ E-Mail erforderlich');return;}
+  const betreff=encodeURIComponent(document.getElementById('em-betreff').value);
+  const body=encodeURIComponent(document.getElementById('em-text').value);
+  window.location.href=`mailto:${to}?subject=${betreff}&body=${body}`;
+  closeM('email-modal');toast('📧 E-Mail-Client geöffnet');
+}
+
+// ── BELEGE ──
+function previewBeleg(input) {
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=document.getElementById('drop-img');
+    const ph=document.getElementById('drop-ph');
+    if(img){img.src=e.target.result;img.style.display='block';}
+    if(ph)ph.style.display='none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderBelege() {
+  const now=new Date();
+  const monat=S.belege.filter(b=>{const d=new Date(b.datum||'');return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();}).length;
+  const summe=S.belege.reduce((s,b)=>s+b.betrag,0);
+  return `
+  <div class="sec-hdr"><div class="sec-title">Belege</div><button class="btn btn-p" onclick="openBelegModal()">📸 Erfassen</button></div>
+  <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="stat-card"><div class="stat-icon">🧾</div><div class="stat-val">${S.belege.length}</div><div class="stat-lbl">Belege</div></div>
+    <div class="stat-card warn"><div class="stat-icon">📅</div><div class="stat-val">${monat}</div><div class="stat-lbl">Diesen Monat</div></div>
+    <div class="stat-card info"><div class="stat-icon">💶</div><div class="stat-val">${summe.toFixed(0)} €</div><div class="stat-lbl">Gesamt</div></div>
+  </div>
+  ${S.belege.length===0?`<div class="card"><div class="card-body" style="text-align:center;padding:36px;color:var(--tm)"><div style="font-size:3rem;margin-bottom:12px">📸</div><div style="font-weight:700">Noch keine Belege.</div><div style="font-size:.82rem;margin-top:6px">Tippe auf "📸 Erfassen" um zu starten.</div></div></div>`:''}
+  <div class="tbl-wrap desktop-only" ${S.belege.length===0?'style="display:none"':''}><table>
+    <thead><tr><th>Foto</th><th>Bezeichnung</th><th>Kategorie</th><th>Betrag</th><th>MwSt</th><th>Datum</th><th>Aktionen</th></tr></thead>
+    <tbody>${[...S.belege].reverse().map(b=>`<tr>
+      <td>${b.bild?`<img src="${b.bild}" style="width:46px;height:46px;object-fit:cover;border-radius:7px;cursor:pointer" onclick="viewBeleg('${b.id}')" alt="">`:' <span style="font-size:1.4rem">🧾</span>'}</td>
+      <td><strong>${b.name}</strong>${b.lieferant?`<br><small style="color:var(--gh);font-weight:600">🏪 ${b.lieferant}</small>`:''}</td>
+      <td><span class="badge badge-e">${b.kat}</span></td>
+      <td><strong>${parseFloat(b.betrag||0).toFixed(2)} €</strong></td>
+      <td>${b.mwst?b.mwst+'%':'–'}</td>
+      <td>${b.datum}</td>
+      <td><button class="btn btn-d btn-sm" onclick="del('belege',${b.id})">✕</button></td>
+    </tr>`).join('')}</tbody></table></div>
+  <div class="mobile-only">${[...S.belege].reverse().map(b=>`<div class="mob-card">
+    <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px">
+      ${b.bild?`<img src="${b.bild}" style="width:60px;height:60px;object-fit:cover;border-radius:9px;cursor:pointer;flex-shrink:0" onclick="viewBeleg(${b.id})" alt="">`:
+      '<div style="width:60px;height:60px;background:rgba(74,140,92,.1);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0">🧾</div>'}
+      <div style="flex:1;min-width:0">
+        <div class="mob-title">${b.name}</div>
+        ${b.lieferant?`<div style="font-size:.73rem;color:var(--gh);font-weight:600">🏪 ${b.lieferant}</div>`:''}
+        <span class="badge badge-e">${b.kat}</span>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <strong style="font-size:1rem">${parseFloat(b.betrag||0).toFixed(2)} €</strong>
+        ${b.mwst?`<div style="font-size:.7rem;color:var(--tm)">${b.mwst}% MwSt</div>`:''}
+        <div style="font-size:.7rem;color:var(--tm)">${b.datum}</div>
+      </div>
+    </div>
+    <div class="mob-act"><button class="btn btn-d btn-sm" onclick="del('belege',${b.id})">✕ Löschen</button></div>
+  </div>`).join('')}</div>`;
+}
+
+function openBelegModal() {
+  // Reset form
+  ['bel-name','bel-lief','bel-betrag'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const bMwst=document.getElementById('bel-mwst');if(bMwst)bMwst.value='';
+  const bDat=document.getElementById('bel-datum');if(bDat)bDat.value=today();
+  const img=document.getElementById('drop-img');if(img){img.style.display='none';img.src='';}
+  const ph=document.getElementById('drop-ph');if(ph)ph.style.display='flex';
+  const fi=document.getElementById('beleg-file');if(fi)fi.value='';
+  openM('neu-beleg-modal');
+}
+
+function saveBeleg() {
+  const name=document.getElementById('bel-name').value.trim();
+  if(!name){toast('⚠ Bezeichnung erforderlich');return;}
+  const img=document.getElementById('drop-img');
+  const bild=img&&img.style.display!=='none'?img.src:null;
+  S.belege.push({id:nid(),name,lieferant:document.getElementById('bel-lief').value||'',kat:document.getElementById('bel-kat').value,betrag:parseFloat(document.getElementById('bel-betrag').value)||0,mwst:document.getElementById('bel-mwst').value||'',datum:document.getElementById('bel-datum').value||today(),bild});
+  closeM('neu-beleg-modal');
+  saveS();toast('✅ Beleg gespeichert');renderPage('belege');
+}
+
+function viewBeleg(id) {
+  const b=S.belege.find(x=>x.id===Number(id)||x.id===id);
+  if(!b||!b.bild)return;
+  document.getElementById('viewer-img').src=b.bild;
+  openM('beleg-viewer');
+}
+
+// ── ZEITERFASSUNG ──
+function calcZ() {
+  const von=document.getElementById('z-von').value;
+  const bis=document.getElementById('z-bis').value;
+  const el=document.getElementById('z-calc');
+  if(von&&bis&&el){
+    const [vh,vm]=von.split(':').map(Number);
+    const [bh,bm]=bis.split(':').map(Number);
+    const h=((bh*60+bm)-(vh*60+vm))/60;
+    el.textContent=h>0?`⏱ Berechnet: ${h.toFixed(2)} Stunden`:'';
+  }
+}
+
+function renderZeiterfassung() {
+  const konten={};
+  S.mitarbeiter.forEach(m=>{
+    const name=m.vorname+' '+m.nachname;
+    const eintraege=S.zeiteintraege.filter(z=>z.ma===name);
+    const total=eintraege.reduce((s,z)=>s+z.stunden,0);
+    konten[name]={stunden:total,lohn:m.lohn,rolle:m.rolle};
+  });
+  return `
+  <div class="sec-hdr"><div class="sec-title">Zeiterfassung</div><button class="btn btn-p" onclick="openM('neu-zeit-modal')">＋ Zeit erfassen</button></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:20px">
+    ${Object.entries(konten).map(([name,d])=>`
+      <div class="sk-card">
+        <div style="font-weight:700;font-size:.86rem;margin-bottom:4px">👷 ${name}</div>
+        <div class="sk-val">${d.stunden.toFixed(1)} h</div>
+        <div style="font-size:.75rem;color:var(--tm);margin-top:3px">${(d.stunden*d.lohn).toFixed(2)} € · ${d.lohn} €/h</div>
+      </div>`).join('')}
+  </div>
+  ${S.zeiteintraege.length===0?'<div class="card"><div class="card-body" style="text-align:center;padding:24px;color:var(--tm)">Noch keine Zeiteinträge.</div></div>':''}
+  <div class="tbl-wrap desktop-only" ${S.zeiteintraege.length===0?'style="display:none"':''}><table>
+    <thead><tr><th>Datum</th><th>Mitarbeiter</th><th>Auftrag</th><th>Von</th><th>Bis</th><th>Stunden</th><th>Notiz</th><th></th></tr></thead>
+    <tbody>${[...S.zeiteintraege].sort((a,b)=>b.datum.localeCompare(a.datum)).map(z=>`<tr>
+      <td>${z.datum}</td><td><strong>${z.ma}</strong></td><td>${z.auftrag||'–'}</td>
+      <td>${z.von||'–'}</td><td>${z.bis||'–'}</td>
+      <td><strong>${z.stunden.toFixed(1)} h</strong></td>
+      <td style="font-size:.78rem;color:var(--tm)">${z.notiz||'–'}</td>
+      <td><button class="btn btn-d btn-sm" onclick="del('zeiteintraege',${z.id})">✕</button></td>
+    </tr>`).join('')}</tbody></table></div>
+  <div class="mobile-only">${[...S.zeiteintraege].sort((a,b)=>b.datum.localeCompare(a.datum)).map(z=>`<div class="mob-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div><div class="mob-title">⏱ ${z.ma}</div><div style="font-size:.76rem;color:var(--tm)">${z.datum}${z.von?' · '+z.von+' – '+(z.bis||'?'):''}</div></div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--gd)">${z.stunden.toFixed(1)}<span style="font-size:.9rem;font-weight:400"> h</span></div>
+    </div>
+    ${z.auftrag?`<div class="mob-row"><span class="mob-lbl">Auftrag</span><span class="mob-val">${z.auftrag}</span></div>`:''}
+    <div class="mob-act"><button class="btn btn-d btn-sm" onclick="del('zeiteintraege',${z.id})">✕ Löschen</button></div>
+  </div>`).join('')}</div>`;
+}
+
+function saveZeit() {
+  const ma=document.getElementById('z-ma').value;
+  if(!ma){toast('⚠ Mitarbeiter wählen');return;}
+  const von=document.getElementById('z-von').value;
+  const bis=document.getElementById('z-bis').value;
+  let std=parseFloat(document.getElementById('z-std').value)||0;
+  if(!std&&von&&bis){
+    const [vh,vm]=von.split(':').map(Number);
+    const [bh,bm]=bis.split(':').map(Number);
+    std=((bh*60+bm)-(vh*60+vm))/60;
+  }
+  if(std<=0){toast('⚠ Stunden oder Von/Bis angeben');return;}
+  S.zeiteintraege.push({id:nid(),ma,datum:document.getElementById('z-datum').value||today(),auftrag:document.getElementById('z-auftrag').value||'',von,bis,stunden:std,notiz:document.getElementById('z-notiz').value||''});
+  closeM('neu-zeit-modal');
+  ['z-von','z-bis','z-std','z-notiz'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const zc=document.getElementById('z-calc');if(zc)zc.textContent='';
+  saveS();toast('✅ Zeit erfasst');renderPage('zeiterfassung');
+}
+
+// ── AUFGABEN ──
+function renderAufgaben() {
+  const pIcon={hoch:'🔴',mittel:'🟡',niedrig:'🟢'};
+  const offen=S.aufgaben.filter(a=>!a.erledigt);
+  const erledigt=S.aufgaben.filter(a=>a.erledigt);
+  const card=a=>`<div class="auf-card ${a.erledigt?'done':a.prio}">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div style="font-weight:700;font-size:.9rem">${pIcon[a.prio]||'🟡'} ${a.titel}</div>
+      <div style="display:flex;gap:5px;flex-shrink:0">
+        <button class="btn btn-sm" style="background:rgba(107,191,122,.15);color:var(--gh);border:none" onclick="toggleAuf(${a.id})">${a.erledigt?'↩':'✓'}</button>
+        <button class="btn btn-sm btn-d" onclick="del('aufgaben',${a.id})">✕</button>
+      </div>
+    </div>
+    <div style="font-size:.74rem;color:var(--tm);display:flex;gap:8px;flex-wrap:wrap;margin-top:5px">
+      ${a.faellig?`<span>📅 ${a.faellig}</span>`:''}${a.ma?`<span>👷 ${a.ma}</span>`:''}${a.notiz?`<span>📝 ${a.notiz}</span>`:''}
+    </div>
+  </div>`;
+  return `
+  <div class="sec-hdr"><div class="sec-title">Aufgaben</div><button class="btn btn-p" onclick="openAufgabeModal()">＋ Neue Aufgabe</button></div>
+  <div class="auf-cols" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div>
+      <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tm);margin-bottom:10px">⏳ Offen (${offen.length})</div>
+      ${offen.length?offen.map(card).join(''):'<p style="color:var(--tm);font-size:.84rem">Keine offenen Aufgaben. 🎉</p>'}
+    </div>
+    <div>
+      <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tm);margin-bottom:10px">✅ Erledigt (${erledigt.length})</div>
+      ${erledigt.length?erledigt.map(card).join(''):'<p style="color:var(--tm);font-size:.84rem">Noch nichts erledigt.</p>'}
+    </div>
+  </div>`;
+}
+
+function openAufgabeModal() {
+  const ms=document.getElementById('auf-ma');
+  if(ms){ms.innerHTML='<option value="">– alle –</option>'+S.mitarbeiter.map(m=>`<option>${m.vorname} ${m.nachname}</option>`).join('');}
+  openM('neu-aufgabe-modal');
+}
+
+function saveAufgabe() {
+  const titel=document.getElementById('auf-titel').value.trim();
+  if(!titel){toast('⚠ Aufgabe eingeben');return;}
+  S.aufgaben.push({id:nid(),titel,prio:document.getElementById('auf-prio').value,faellig:document.getElementById('auf-faellig').value||'',ma:document.getElementById('auf-ma').value||'',notiz:document.getElementById('auf-notiz').value||'',erledigt:false});
+  closeM('neu-aufgabe-modal');
+  ['auf-titel','auf-notiz','auf-faellig'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  saveS();toast('✅ Aufgabe gespeichert');renderPage('aufgaben');
+}
+
+function toggleAuf(id) {
+  const a=S.aufgaben.find(x=>x.id===id);if(!a)return;
+  a.erledigt=!a.erledigt;
+  saveS();toast(a.erledigt?'✅ Erledigt!':'↩ Wieder geöffnet');renderPage('aufgaben');
+}
+
+// ── PIN SCHUTZ ──
+let pwInput='';
+
+function buildNumpad() {
+  const np=document.getElementById('pw-numpad');if(!np)return;
+  const keys=[1,2,3,4,5,6,7,8,9,'',0,'⌫'];
+  np.innerHTML=keys.map(k=>`<button class="btn btn-o" onclick="pwKey('${k}')" style="font-size:1.2rem;font-weight:700;padding:14px;justify-content:center">${k}</button>`).join('');
+}
+
+function pwKey(k) {
+  if(k==='')return;
+  if(k==='⌫'){pwInput=pwInput.slice(0,-1);}
+  else if(pwInput.length<4){pwInput+=k;}
+  updateDots();
+  if(pwInput.length===4)setTimeout(checkPIN,200);
+}
+
+function updateDots() {
+  document.querySelectorAll('.pw-dot').forEach((d,i)=>d.classList.toggle('filled',i<pwInput.length));
+}
+
+function checkPIN() {
+  const stored=localStorage.getItem(PIN_KEY);
+  const err=document.getElementById('pw-err');
+  if(pwInput===stored){
+    closeM('pw-modal');
+    if(err)err.textContent='';
+    pwInput='';updateDots();
+  } else {
+    if(err)err.textContent='❌ Falscher PIN';
+    pwInput='';updateDots();
+  }
+}
+
+function savePIN() {
+  const old=document.getElementById('pw-old').value;
+  const n1=document.getElementById('pw-new1').value;
+  const n2=document.getElementById('pw-new2').value;
+  const stored=localStorage.getItem(PIN_KEY);
+  if(stored&&old!==stored){toast('⚠ Aktueller PIN falsch');return;}
+  if(n1.length!==4||!/^\d{4}$/.test(n1)){toast('⚠ PIN muss 4 Ziffern sein');return;}
+  if(n1!==n2){toast('⚠ PINs stimmen nicht überein');return;}
+  localStorage.setItem(PIN_KEY,n1);
+  closeM('pw-change-modal');
+  ['pw-old','pw-new1','pw-new2'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  toast('✅ PIN gespeichert');
+}
+
+function initPIN() {
+  const pin=localStorage.getItem(PIN_KEY);
+  if(pin){buildNumpad();openM('pw-modal');}
+}
+
+// ── SIDEBAR ──
+function toggleSidebar() {
+  const sb=document.getElementById('sidebar');
+  const ov=document.getElementById('overlay');
+  const hb=document.getElementById('hbtn');
+  sb.classList.toggle('open');
+  ov.classList.toggle('open');
+  if(hb)hb.classList.toggle('open');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+  const hb=document.getElementById('hbtn');if(hb)hb.classList.remove('open');
+}
+
+// ── iOS INSTALL HINT ──
+function closeIOSHint() {
+  document.getElementById('ios-hint').classList.remove('show');
+  localStorage.setItem('ios_hint_dismissed','1');
+}
+
+function showIOSHint() {
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  const standalone=window.navigator.standalone||window.matchMedia('(display-mode: standalone)').matches;
+  const dismissed=localStorage.getItem('ios_hint_dismissed');
+  if(isIOS&&!standalone&&!dismissed){
+    setTimeout(()=>document.getElementById('ios-hint').classList.add('show'),2000);
+  }
+}
+
+// ── INIT ──
+loadS();
+document.getElementById('date-el').textContent = new Date().toLocaleDateString('de-DE',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+renderPage('dashboard');
+initPIN();
+showIOSHint();
+</script>
+
+<div id="iosBanner" style="display:none;position:fixed;bottom:76px;left:12px;right:12px;
+  background:#1a3a2a;color:#fff;border-radius:16px;padding:14px 16px;z-index:500;
+  flex-direction:column;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.3);">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span style="font-size:1.8rem;">🌿</span>
+    <div style="flex:1"><b style="font-size:.9rem;">App installieren</b><br>
+      <small style="opacity:.75;font-size:.72rem;">Tippe Teilen ⎙ → „Zum Home-Bildschirm"</small></div>
+    <button onclick="document.getElementById('iosBanner').style.display='none';localStorage.setItem('ib','1')"
+      style="background:none;border:none;color:rgba(255,255,255,.6);font-size:1.4rem;cursor:pointer;padding:4px 8px;">✕</button>
+  </div>
+</div>
+</body>
+</html>
